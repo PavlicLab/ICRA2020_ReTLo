@@ -3,3 +3,6 @@
 *.log
 *.gz
 IEEEtran_bst_HOWTO.pdf
+*.blg
+*.bbl
+*.dvi
