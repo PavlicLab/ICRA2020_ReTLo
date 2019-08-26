@@ -125,11 +125,25 @@
 	possible applications to variable sizes of robotic system and also a general framework 
 	that would not impose any constraint on dynamics of the system.
 	
-	In this work, we propose \emph{IPY} to significantly reduce prediction errors, which enables to 
-	gain stable performance even with more robots. \emph{IPY} runs deep neural network as a backbone 
-	to take into account physical constraints on the team formation and produce probabilistic 
-	predictions in the form of image. We conduct all experiments on a physical robotic platform,
-	\emph{Thymio} \cite{Shin14}, to demonstrate the performance gain in more realistic environments. 
+	In this work, we propose \emph{IPY} to significantly reduce prediction errors solving 
+	the RTL problem, which would allow to gain stable performance even with more robots added. 
+	\emph{IPY} runs a deep neural network as a backbone, 
+	first to consider physical constraints on the sequential change of team formation and, 
+	second to use a probabilistic representation in the form of image for obtained observations and 
+	new predictions. Specifically, every observed or predicted position is 
+	encoded as an image in which the summation of all values must be $1$, which can be
+	viewed as a probability distribution of position of the robot. Hence,
+	\emph{IPY} learns how to synthesize inputs with some uncertainty to produce a probabilistic 
+	prediction outcome in end-to-end fashion. Furthermore, a recurrent layer is deployed in \emph{IPY}, 
+	which enables the model to take into account possible evolution of 
+	team formation based on recent history and reduce the searching space for predicted solution. 
+	With all combined, historical probabilistic (soft) formations are used as input per prediction
+	providing more flexibility to the predictor in selecting salient features and finally leading to 
+	more robust performance even when the input is noisy to some level.
+	
+	We conduct all experiments on a physical robotic platform,
+	\emph{Thymio} \cite{Shin14}, to demonstrate the performance gain in more realistic environments, 
+	which contrasts the previous work that relied only on computer simulations.  
 	
 	
 		
