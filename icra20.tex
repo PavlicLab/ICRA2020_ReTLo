@@ -71,60 +71,19 @@
 	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 	\begin{abstract}
 		
-%		In robot teaming, a robot that is able to understand the formation of 
-%		entire team in real time may perform adjustive actions for the sake of the team.
-%		
-%		comm free
-%		
-%		Individual robots in multi-robot teams usually behave according to
-%		relatively simple and often deterministic rules. This behavioral
-%		regularity may allow for variations in one robot's behavior to provide
-%		useful information about the state of other robots in the team. Thus,
-%		coordinated motion between distantly separated robots could be achieved
-%		without direct communication. 
-
-		We propose \emph{IPY}, designed to tackle the remote teammate localization problem
-		introduced 
-		by \cite{Choi17} where a robot embedded in a multi-robot team is to predict positions 
-		of all other teammates in which each robot has a limited sensor radius and a 
+		We propose \emph{IPY}, as an extension of \cite{Choi17}, to tackle the remote teammate 
+		localization problem where a robot embedded in a multi-robot team is to predict positions 
+		of all other teammates when each robot has a limited sensor radius and a 
 		relatively simple motion rule with dependency on the position of its nearest neighbors. 
-		They presented a data-driven method to train the predicting robot only in 
-		a 3-robot team and extend it to larger teams without re-training in 
-		communication-free environment. 
-		One of the challenges in scaling up the prediction ability was, however, that
-		errors in prediction for nearer teammates highly deteriorated prediction accuracy 
-		for farther ones, since the predictor took the outcome for the nearer as input to make
-		predictions for the more distant. 
-		To reduce such propagated errors, \emph{IPY} not only employs a state-of-the-art deep
-		neural network but utilizes more ample representations of all observations and its 
-		intermediate predictions, which are visualized onto two dimensional images to 
-		present predicted probability distribution over possible coordinates instead of 
-		giving a numerical coordinates only. 
-		As opposed to the previous work in \cite{Choi17}, which relied on computer simulations, 
-		we show our method on a real robotic platform, \emph{Thymio}, to demonstrate that 
-		it can provide robust prediction power even when the size of robot team increases, and 
-		the prediction outcome is more interpretable.  
+		The previous work presented feasibility of a scalable machine learning approach for the 
+		predicting robot to proactively assist a team behavior in caging scenario. 
+		In this work, \emph{IPY} is designed to improve scalability by taking into account
+		physical constraints on the team formation as well as producing probabilistic predictions  
+		in the form of image through deep learning pipeline.
+		Furthermore, while we previously relied only on computer simulations, 
+		all experiments in this work are performed in a physical robotic platform, \emph{Thymio}, 
+		to demonstrate the performance gain in more realistic environments. 
 		
-%		similar data-driven method 
-%		to obtain a robot that can utilize observations on its neighbor and 
-%		infer positions of distant teammates. A distinct feature is, however, to employ 
-%		visual images to represent all the intermediate information during 
-%		prediction process. 		
-		
-%		Unfortunately, the dynamics describing a
-%		collective multi-robot system will often be too complex to analytically
-%		derive the relationship between observed nearest-neighbor variations and
-%		environmentally driven changes in the behavior of remote robots.
-%		
-%		Artificial neural networks~(ANNs) may be used to find this relationship
-%		within training data, but scalability of the approach requires that the
-%		resulting ANNs be functional even in teams with sizes not represented in
-%		the training data. To this end, we train a communication-free,
-%		localization ANN on one robot in a 3-robot team and show how it can be
-%		extended without re-training to larger teams. We test our approach in a
-%		distributed caging scenario where a chain of simulated robots searches
-%		for an object to encircle and executes a coordinated behavior, ideally
-%		with no communication, shortly after only one detects the object.
 	\end{abstract}
 	
 	
@@ -134,7 +93,7 @@
 	\label{sec:intro}
 	
 	In multi-robot systems including swarms, every robot is usually allowed to observe 
-	only a subset of its team members and interact with them to take the next action 
+	only a subset of its team members and interact with them to determine the next action 
 	according to relatively simple motion rules. 
 	Such a property enables the entire system to perform in a distributed manner, and 
 	also the behavior of it can be driven by some of robots embedded in it to 
