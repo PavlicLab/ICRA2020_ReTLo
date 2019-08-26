@@ -71,8 +71,8 @@
 	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 	\begin{abstract}
 		
-		We propose \emph{IPY}, as an extension of \cite{Choi17}, to tackle the remote teammate 
-		localization problem where a robot embedded in a multi-robot team is to predict positions 
+		We propose \emph{IPY}, as an extension of \cite{Choi17}, to tackle the Remote Teammate 
+		Localization (RTL) problem where a robot embedded in a multi-robot team is to predict positions 
 		of all other teammates when each robot has a limited sensor radius and a 
 		relatively simple motion rule with dependency on the position of its nearest neighbors. 
 		The previous work presented feasibility of a scalable machine learning approach for the 
@@ -104,26 +104,35 @@
 	for the sake of the team.
 	
 	In \cite{Choi17}, we suggested a machine learning method to solve the 
-	remote localization problem where a robot embedded in a multi-robot team is to predict 
+	RTL problem where a robot embedded in a multi-robot team is to predict 
 	positions of all other teammates using only local observations about a single nearby teammate. 
 	Since each robot has a limited sensor radius and a relatively simple motion rule with dependency 
-	on the position of its nearest neighbors, the predicting robot has to be able to learn the regularity 
+	on the position of its nearest neighbors in line formation, 
+	the predicting robot has to be able to learn the regularity 
 	of the observed motions. Through simulated experiments, we showed the feasibility of the idea 
 	especially in caging scenario in which the predicting robot could recognize the team behavior and 
 	use a proactive maneuver accordingly. 
 	
+	RTL problem provides some unique characteristics compared to general localization problems. 
+	In RTL, the robot that executes predictions does not try to localize itself but its teammates using 
+	accessible observations. 
+	Moreover, the robot is not allowed to communicate with other members during prediction phase to 
+	consider communication-free scenarios, which differs from works on cooperative localization. 
+	Hence, RTL usually assumes that robots behave with correlations with their neighbors so that 
+	the resulting behaviors contain the state information of their neighbors. 	
+	In this sense, state observers in networked robotic system could be a more similar 
+	configuration to RTL, but RTL emphasizes 
+	possible applications to variable sizes of robotic system and also a general framework 
+	that would not impose any constraint on dynamics of the system.
+	
 	In this work, we propose \emph{IPY} to significantly reduce prediction errors, which enables to 
-	gain stable performance even with more robots. 
+	gain stable performance even with more robots. \emph{IPY} runs deep neural network as a backbone 
+	to take into account physical constraints on the team formation and produce probabilistic 
+	predictions in the form of image. We conduct all experiments on a physical robotic platform,
+	\emph{Thymio} \cite{Shin14}, to demonstrate the performance gain in more realistic environments. 
 	
-	machine learning approach obtains a regression model for a robot in 
-	networked multi-robot system to learn behavioral regularity of its neighbor to 
-	predict the position of another member within a 3-robot modular team run in communication-free
-	environment. 
-	They emphasized scalability of their approach accomplished by repetitive applications of the
-	trained regressior to a chain of 3-robot modular teams. 
-	Such a design, however, causes errors from prediction in a modular team to amplify 
-	those in the applications to the next modules in chain. 
 	
+		
 	%
 	\begin{figure}\centering
 		\subfloat[Multi-robot chain]{\label{fig:SampleHFT}%
