@@ -96,17 +96,25 @@
 	only a subset of its team members and interact with them to determine the next action 
 	according to relatively simple motion rules. 
 	Such a property enables the entire system to perform in a distributed manner, and 
-	also the behavior of it can be driven by some of robots embedded in it to 
-	achieve the goal [x]. 
+	also the behavior of it can be driven easily by a few leader robots to 
+	eventually achieve the goal [x]. 
 	This implies that if a robot has an ability to recognize useful property, e.g.) formation, 
-	of the whole team in real time, which could be only observed in a global view,
-	it could present adjustive actions to promote a better collective behavior 
+	of the whole team in real time using its local sensors, 
+	it could present adjustive actions accordingly to better promote a collective behavior 
 	for the sake of the team.
 	
-	A few works such as \cite{Choi17} have suggested a data-driven method to solve the 
+	In \cite{Choi17}, we suggested a machine learning method to solve the 
 	remote localization problem where a robot embedded in a multi-robot team is to predict 
-	positions of all other teammates, when each robot has a limited sensor radius and
-	a relatively simple motion rule with dependency on the position of its nearest neighbors. Their 
+	positions of all other teammates using only local observations about a single nearby teammate. 
+	Since each robot has a limited sensor radius and a relatively simple motion rule with dependency 
+	on the position of its nearest neighbors, the predicting robot has to be able to learn the regularity 
+	of the observed motions. Through simulated experiments, we showed the feasibility of the idea 
+	especially in caging scenario in which the predicting robot could recognize the team behavior and 
+	use a proactive maneuver accordingly. 
+	
+	In this work, we propose \emph{IPY} to significantly reduce prediction errors, which enables to 
+	gain stable performance even with more robots. 
+	
 	machine learning approach obtains a regression model for a robot in 
 	networked multi-robot system to learn behavioral regularity of its neighbor to 
 	predict the position of another member within a 3-robot modular team run in communication-free
