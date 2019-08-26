@@ -87,7 +87,7 @@
 		introduced 
 		by \cite{Choi17} where a robot embedded in a multi-robot team is to predict positions 
 		of all other teammates in which each robot has a limited sensor radius and a 
-		relatively simple motion rule with dependency on its nearest neighbors. 
+		relatively simple motion rule with dependency on the position of its nearest neighbors. 
 		They presented a data-driven method to train the predicting robot only in 
 		a 3-robot team and extend it to larger teams without re-training in 
 		communication-free environment. 
@@ -109,10 +109,7 @@
 %		to obtain a robot that can utilize observations on its neighbor and 
 %		infer positions of distant teammates. A distinct feature is, however, to employ 
 %		visual images to represent all the intermediate information during 
-%		prediction process. 
-		
-		
-		
+%		prediction process. 		
 		
 %		Unfortunately, the dynamics describing a
 %		collective multi-robot system will often be too complex to analytically
@@ -140,58 +137,25 @@
 	only a subset of its team members and interact with them to take the next action 
 	according to relatively simple motion rules. 
 	Such a property enables the entire system to perform in a distributed manner, and 
-	also the behavior of the team can be driven by some of robots embedded in it to 
+	also the behavior of it can be driven by some of robots embedded in it to 
 	achieve the goal [x]. 
 	This implies that if a robot has an ability to recognize useful property, e.g.) formation, 
 	of the whole team in real time, which could be only observed in a global view,
 	it could present adjustive actions to promote a better collective behavior 
 	for the sake of the team.
 	
-	A few works such as \cite{Choi17} have suggested a data-driven approach by which a robot in 
-	networked multi-robot system can learn behavioral regularity of its neighbors to 
-	predict the position of all others without any explicit communication.
-	They emphasized scalability of their approach accomplished by repetitive applications of a regression model, which has been trained in a modular robot team, to larger teams.  
+	A few works such as \cite{Choi17} have suggested a data-driven method to solve the 
+	remote localization problem where a robot embedded in a multi-robot team is to predict 
+	positions of all other teammates, when each robot has a limited sensor radius and
+	a relatively simple motion rule with dependency on the position of its nearest neighbors. Their 
+	machine learning approach obtains a regression model for a robot in 
+	networked multi-robot system to learn behavioral regularity of its neighbor to 
+	predict the position of another member within a 3-robot modular team run in communication-free
+	environment. 
+	They emphasized scalability of their approach accomplished by repetitive applications of the
+	trained regressior to a chain of 3-robot modular teams. 
 	Such a design, however, causes errors from prediction in a modular team to amplify 
-	those in the following modular. 
-	
-	To gain more robust performance, we present \emph{IPY} that uses imaginative representation 
-	for all observations and its prediction outcomes, even though in \cite{Choi17}, 
-	a regression model was to calculate one numerical estimate per target state variable. 
-	The imaginative format allows to express discretized probability distribution 
-	over possible states of predicted teammate so that \emph{IPY} can show not only its best
-	prediction information but how confident it is on the outcome. Because the 
-	visualized prediction in a modular robot team is used in the next modular team, 
-	it could assist the next prediction as a more informative feature.  
-
-	during predictions for following modular teams. More specifically, the probability 
-	distribution of predicted position is projected onto a two dimensional vector as an image 
-	visualization, while that of inferred orientation is on a dimension of one dimension. 
-	
-	\emph{IPY} also takes into account the historical state information known so far, 
-	since 
-	
-	trains a deep neural network, which runs multiple convolutional layers and 
-	recurrent layers as backbone, to handle 1) historical state information known so far and
-	2) the imaginative   
-	
-	
-	model advanced 
-	consider errors in output and input
-	
-	Using a more powerful machine learning model could help obtain more robust performance
-	to some extent. In addition to it, we propose \emph{IPY} that generates two dimensional 
-	images to represent probability distribution for predicted states of teammates such as 
-	position and orientation. 
-	This enables the predictor to learn to show its predictive uncertainty on possible 
-	states and also to synthesize previous uncertainties to make current prediction. 
-	
-	Our contributions are as follows: 
-	\begin{itemize}
-		\item historical 
-		\item Application of deep neural network 
-		\item Visual representation 
-		\item Physical robot implementation 
-	\end{itemize}
+	those in the applications to the next modules in chain. 
 	
 	%
 	\begin{figure}\centering
@@ -212,6 +176,37 @@
 	\end{figure}
 	%
 	
+	To gain more robust performance, we present \emph{IPY} that uses imaginative representation 
+	for all observations and its prediction outcomes, even though in \cite{Choi17}, 
+	a regression model was to calculate one numerical estimate per target state variable. 
+	The imaginative format allows to express discretized probability distribution 
+	over possible states of predicted teammate so that \emph{IPY} can show not only its best
+	prediction outcome but how confident it is on the outcome. 
+	Such a property could assist the predictor to better synthesize the previous predictions as
+	input during repetitive process.
+	
+	Specifically, the position information is projected onto a two
+	dimensional vector as an image, while orientation is on a one dimensional vector.
+	Since each vector basically represents a probability distribution, where the sum of all values 
+	must be $1$, the representation of obtained observation has $1$ for the corresponding element
+	and $0$ for others. Therefore, \emph{IPY} is trained to produce a probability distribution of 
+	predicted positions and orientations of its teammates. 
+	
+	\emph{IPY} also takes into account the historical state information known so far, 
+	since it can regulate the predictor on current observation of neighbor as well as
+	physical constraints on the global formation. To deal with the historical imaginative 
+	representation, \emph{IPY} performs with a stack of convolutional layers and a recurrent
+	layer. 
+		
+	We use a physical robotic platform, \emph{Thymio}, to demonstrate the effectiveness of 
+	our proposed methods, although \cite{Choi17} relied only on computer simulations.
+	We compare performances of a model in \cite{Choi17}, general state-of-the-art models, 
+	and some variants of \emph{IPY} to show how errors increase as more robots are employed in 
+	general and how \emph{IPY} alleviates it by the imaginative representation. 
+	
+	This paper is organized as follow. 
+	Section~\ref{sec:related_work} discusses related literature. 
+	Section~
 	
 	In networked multi-robot teams, coordinated behaviors typically emerge
 	from interactions among adjacent robots with limited sensor range,
@@ -501,6 +496,10 @@
 	% through which to search for efficient motion controllers in multi-robot
 	% teams, we use neural networks as statistical models for the complex
 	% dynamics of other robots in the team.
+	
+	\section{Problem Description} 
+	\label{sec:problemdesc} 
+	
 	
 	\section{System Design}
 	\label{sec:sysdesign}
@@ -1012,28 +1011,29 @@
 	\section{Summary, Conclusion, and Future Work}
 	\label{sec:conclusion}
 	
-	We have presented a scalable algorithm combining a machine learning
-	approach with switching frames of reference, which enables an individual
-	robot in multi-robot system to predict the position of unobservable
-	teammates from the motions of an observable neighbor. We used a
-	realistic robotic simulator with noise and nonholonomic kinematics to
-	show that a robot at one end of a chain could successfully estimate the
-	position of all other robots with very little explicit message passing.
-	Although performance of the estimator was strongest when the formation
-	took on simple shapes, like a line, the method was still able to
-	estimate robot positions for more complex maneuvers. We showed that the
-	method could allow robots to coordinate to encircle an encountered
-	object and that the far-robot position inferences were sufficient for
-	the robots to coordinate their actions.
+	We have shown \emph{IPY}, a powerful approach to tackle the remote localization problem 
+	where a robot with limited sensors is to predict positions of all others only using 
+	observations about its nearest neighbor. 
+	\emph{IPY} follow the fundamental spirit of \cite{Choi17} to apply a predictor 
+	trained for a small robot team to a chain of them in a larger team, since it 
+	can provide a scalable feature without re-training.   
+	The distinction in \emph{IPY} is , however, to use a sequence of historical knowledge and 
+	make predictions based on imagination of robot states including position and orientation.
+	We expected learning with history would help regulate the model on physical constraints on 
+	the team formation, and also the imaginative representation could contain 
+	certainty about the prediction, which would bring about more robust performance. 
 	
-	In future work, we plan to improve the overall performance of the
-	estimation to better demonstrate the scalability of this general method
-	to larger multi-robot systems and swarms. Also, we will consider more
-	general multi-agent system applications~-- including situational
-	awareness within Internet of Things~(IoT) devices and social media~-- in
-	which local decision making could be improved by inferring global
-	properties only from information gathered locally.
-
+	The experiment results were obtained using a realistic robotic platform to prove 
+	that our method outperforms not only the regressor
+	introduced in \cite{Choi17} but also a general state-of-the-art neural network 
+	model that is able to use historical data. Especially, our model can present 
+	stable performance even when the input contains some errors which have occurred in 
+	previous prediction. 
+	  
+	
+	In future work, 
+	
+	
 {\small
 	\bibliographystyle{IEEEtran}
 	\bibliography{IEEEabrv, IEEEexample}
