@@ -141,12 +141,6 @@
 	providing more flexibility to the predictor in selecting salient features and finally leading to 
 	more robust performance even when the input is noisy to some level.
 	
-	We conduct all experiments on a physical robotic platform,
-	\emph{Thymio} \cite{Shin14}, to demonstrate the performance gain in more realistic environments, 
-	which contrasts the previous work that relied only on computer simulations.  
-	
-	
-		
 	%
 	\begin{figure}\centering
 		\subfloat[Multi-robot chain]{\label{fig:SampleHFT}%
@@ -166,37 +160,62 @@
 	\end{figure}
 	%
 	
-	To gain more robust performance, we present \emph{IPY} that uses imaginative representation 
-	for all observations and its prediction outcomes, even though in \cite{Choi17}, 
-	a regression model was to calculate one numerical estimate per target state variable. 
-	The imaginative format allows to express discretized probability distribution 
-	over possible states of predicted teammate so that \emph{IPY} can show not only its best
-	prediction outcome but how confident it is on the outcome. 
-	Such a property could assist the predictor to better synthesize the previous predictions as
-	input during repetitive process.
-	
-	Specifically, the position information is projected onto a two
-	dimensional vector as an image, while orientation is on a one dimensional vector.
-	Since each vector basically represents a probability distribution, where the sum of all values 
-	must be $1$, the representation of obtained observation has $1$ for the corresponding element
-	and $0$ for others. Therefore, \emph{IPY} is trained to produce a probability distribution of 
-	predicted positions and orientations of its teammates. 
-	
-	\emph{IPY} also takes into account the historical state information known so far, 
-	since it can regulate the predictor on current observation of neighbor as well as
-	physical constraints on the global formation. To deal with the historical imaginative 
-	representation, \emph{IPY} performs with a stack of convolutional layers and a recurrent
-	layer. 
+	We conduct all experiments on a physical robotic platform,
+	\emph{Thymio} \cite{Shin14}, to demonstrate the improvement in more realistic environments in 
+	contrast to the previous work that relied only on computer simulations. 
+	All codes are available online\footnote{http://www.github.com/ctyeong}, and supplementary videos 
+	are submitted as well. 
 		
-	We use a physical robotic platform, \emph{Thymio}, to demonstrate the effectiveness of 
-	our proposed methods, although \cite{Choi17} relied only on computer simulations.
-	We compare performances of a model in \cite{Choi17}, general state-of-the-art models, 
-	and some variants of \emph{IPY} to show how errors increase as more robots are employed in 
-	general and how \emph{IPY} alleviates it by the imaginative representation. 
-	
 	This paper is organized as follow. 
-	Section~\ref{sec:related_work} discusses related literature. 
-	Section~
+	In Section~\ref{sec:related_work}, we explore related literature and the distinction of our work. 
+	Section~\ref{sec:problem_description} explains more details about our setting of RTL problem. 
+	Then, we introduce our method, \emph{IPY}, in Section~\ref{sec:method}, and 
+	Section~\ref{sec:experiments} explains details about experiments performed on real robots, 
+	including data collection, hyperparameters used for learning, and the results. 
+	Lastly, we summarize our research and discuss future directions 
+	in Section~\ref{sec:discussion_and_future_work}.
+	
+	\section{Related work}
+	\label{sec:related_work}
+	
+	\section{Problem Description} 
+	\label{sec:problem_description}
+	
+	\section{Method}
+	\label{sec:method}
+	
+	\section{Experiments} 
+	\label{sec:experiments} 
+	
+	\subsection{Data collection} 
+	\label{sec:data_collection}
+	
+	\subsection{Results} 
+	\label{sec:results}
+	
+	\section{Discussion \& Future work}
+	\label{sec:discussion_and_future_work}
+	
+%	Specifically, the position information is projected onto a two
+%	dimensional vector as an image, while orientation is on a one dimensional vector.
+%	Since each vector basically represents a probability distribution, where the sum of all values 
+%	must be $1$, the representation of obtained observation has $1$ for the corresponding element
+%	and $0$ for others. Therefore, \emph{IPY} is trained to produce a probability distribution of 
+%	predicted positions and orientations of its teammates. 
+	
+%	\emph{IPY} also takes into account the historical state information known so far, 
+%	since it can regulate the predictor on current observation of neighbor as well as
+%	physical constraints on the global formation. To deal with the historical imaginative 
+%	representation, \emph{IPY} performs with a stack of convolutional layers and a recurrent
+%	layer. 
+		
+%	We use a physical robotic platform, \emph{Thymio}, to demonstrate the effectiveness of 
+%	our proposed methods, although \cite{Choi17} relied only on computer simulations.
+%	We compare performances of a model in \cite{Choi17}, general state-of-the-art models, 
+%	and some variants of \emph{IPY} to show how errors increase as more robots are employed in 
+%	general and how \emph{IPY} alleviates it by the imaginative representation. 
+	
+
 	
 	In networked multi-robot teams, coordinated behaviors typically emerge
 	from interactions among adjacent robots with limited sensor range,
@@ -330,8 +349,6 @@
 	\emph{Robotarium}~\cite{PWGDMAFE16}. Finally, we give concluding remarks
 	in Section~\ref{sec:conclusion}.
 	
-	\section{Related Work}
-	\label{sec:related_work}
 	
 	In the context of the example scenario presented in this work, our goal
 	is to enable an individual robot, \emph{Tail}, to infer the positions of
