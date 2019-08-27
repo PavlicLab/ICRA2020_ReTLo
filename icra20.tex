@@ -125,6 +125,24 @@
 	possible applications to variable sizes of robotic system and also a general framework 
 	that would not impose any constraint on dynamics of the system.
 	
+	%
+	\begin{figure}\centering
+		\includegraphics[width=1.\columnwidth]{fig_Concept}
+		\caption{Example of \emph{IPY} performing RTL on $6$-robot team. 
+			While the \emph{Head} (red) is driving 
+			the team in line formation, the \emph{Tail} can observe the motions of 
+			\emph{Follower 1} (purple) within its sensor radius (yellow).
+			The observation, $O$, and the historical positions of all robots, $h$, that
+			the \emph{Tail} has known so far become an input to \emph{IPY} to pro 
+			All positions of robots in the local view of \emph{Tail} are visualized in 
+			image as probabilistic representation. Note here that since \emph{Follower 4} 
+			can be observed directly, the image representation does not illustrate any
+			uncertainty for it. 
+		}
+		\label{fig:Concept}
+	\end{figure}
+	%
+	
 	In this work, we propose \emph{IPY} to significantly reduce prediction errors solving 
 	the RTL problem, which would allow to gain stable performance even with more robots added. 
 	\emph{IPY} runs a deep neural network as a backbone, 
@@ -140,20 +158,6 @@
 	With all combined, historical probabilistic (soft) formations are used as input per prediction
 	providing more flexibility to the predictor in selecting salient features and finally leading to 
 	more robust performance even when the input is noisy to some level.
-	
-	%
-	\begin{figure}\centering
-		\includegraphics[width=1.\columnwidth]{fig_Concept}
-		\caption{Motivating examples.
-			In \protect\subref{fig:SampleHFT}, heterogeneous robots move in
-			chain formation from right to left. In
-			\protect\subref{fig:SampleCaging}, the \emph{Tail} robot breaks
-			out of chain formation to more rapidly encircle an object
-			encountered first by \emph{Head}.
-		}
-		\label{fig:Concept}
-	\end{figure}
-	%
 	
 	We conduct all experiments on a physical robotic platform,
 	\emph{Thymio} \cite{Shin14}, to demonstrate the improvement in more realistic environments in 
