@@ -173,11 +173,8 @@
 	including data collection, hyperparameters used for learning, and the results. 
 	Lastly, we summarize our research and discuss future directions 
 	in Section~\ref{sec:discussion_and_future_work}.
-	
-	\section{Related work}
-	\label{sec:related_work}
-	
-		%
+
+	%
 	\begin{figure*}\centering
 		\includegraphics[width=1.8\columnwidth]{fig_DL_Pipeline}
 		\caption{Structure of \emph{IPY-Net}. This is an snapshot example when applied to a focused module of
@@ -192,6 +189,11 @@
 	\end{figure*}
 	%
 	
+	
+	\section{Related work}
+	\label{sec:related_work}
+	
+	
 	\section{Problem Description} 
 	\label{sec:problem_description}
 	
@@ -203,14 +205,26 @@
 	\label{sec:experiments} 
 	
 	
-	\begin{table}[]
+	\begin{table}[t]
 		\label{table:data_description}
+		\centering
 		\begin{tabular}{|c|c|c|c|c|}
 			\hline
 						&  Duration & Num. of Samples & Num. of Instances  \\ \hline
 			$3$ robots & $120$ minutes & $2,000$ & $500$  \\ \hline
 			$5$ robots & $60$ minutes  & $1,000$ & $250$  \\ \hline
 		\end{tabular}
+		\caption{Description of data collected from executions of $3$-robot and $5$-robot teams.}
+	\end{table}
+
+	\begin{table}[]
+		\label{table:overall_performance}
+		\centering
+		\begin{tabular}{|c|c|c|}
+			\hline
+			&  $3$ robots & $5$ robots  \\ \hline
+			Avg Distance & $20.0$ & $30.0$  \\ \hline
+		\end{tabular}	
 		\caption{Description of data collected from executions of $3$-robot and $5$-robot teams.}
 	\end{table}
 	
@@ -280,38 +294,58 @@
 	
 %	\subsection{Results} 
 %	\label{sec:results}
+
+	\begin{figure}[t]
+		\centering
+		\includegraphics[width=.8\columnwidth]{fig_micro_eval}
+		\caption{Prediction errors of \emph{IPY-Net} and \emph{I-LSTM-FC} 
+			for different robots at each time step.  
+		}
+		\label{fig:micro_eval}
+	\end{figure}
+
 	
 	\subsection{Overall accuracy}
 	\label{sec:overall_performance}
 	
+	We show overall performance of each model in Table~\ref{table:overall_performance}. 
+	The error distance is averaged for all samples of all robots. 
+
 	
 	\subsection{Microscopic analysis}
 	\label{sec:microscopic_analysis}
 	
-	Here, we highlight the behavior of 
+	Here, we further analyze the behaviors of top two models in overall performance 
+	by focusing more on errors for different robots at each time step. 
+	The robot-wise error is averaged at each step across instances. 
+	The result could help compare the upper bounds of errors of the models and 
+	understand the feasibility of them during the instance interval. 
+
 	
+	\begin{figure}[t]
+		\centering
+		\includegraphics[width=.8\columnwidth]{fig_heatmap}
+		\caption{Visualized predicted heatmap examples generated from \emph{IPY-Net}. 
+			Each row contains snapshots of three instant time steps during a unique 
+			instance. In each instance, the frames are sorted in increasing order in time. 			 
+		}
+		\label{fig:heatmap}
+	\end{figure}
+
 	
 	\subsection{Qualitative results} 
 	\label{sec:qualitative_results} 
 
-%	Specifically, the position information is projected onto a two
-%	dimensional vector as an image, while orientation is on a one dimensional vector.
-%	Since each vector basically represents a probability distribution, where the sum of all values 
-%	must be $1$, the representation of obtained observation has $1$ for the corresponding element
-%	and $0$ for others. Therefore, \emph{IPY} is trained to produce a probability distribution of 
-%	predicted positions and orientations of its teammates. 
+	This section visualizes the prediction outcomes of \emph{IPY-Net}, while the robot team
+	evolves its shape over time. Figure~\ref{fig:heatmap} displays three separate instances in which 
+	the generated heatmaps are overlaid on the corresponding original video frames illustrating 
+	the predicted probability distribution of the team-level formation. 
 	
-%	\emph{IPY} also takes into account the historical state information known so far, 
-%	since it can regulate the predictor on current observation of neighbor as well as
-%	physical constraints on the global formation. To deal with the historical imaginative 
-%	representation, \emph{IPY} performs with a stack of convolutional layers and a recurrent
-%	layer. 
-		
-%	We use a physical robotic platform, \emph{Thymio}, to demonstrate the effectiveness of 
-%	our proposed methods, although \cite{Choi17} relied only on computer simulations.
-%	We compare performances of a model in \cite{Choi17}, general state-of-the-art models, 
-%	and some variants of \emph{IPY} to show how errors increase as more robots are employed in 
-%	general and how \emph{IPY} alleviates it by the imaginative representation. 
+	The results imply that \emph{IPY-Net} can properly track the emerging behaviors of the team 
+	triggered by arbitrary motion sequences. Moreover, the visualized output helps
+	human users better interpret the outcome taking into consideration the confidence levels 
+	offered by the predictive model. 
+	
 
 	\section{Discussion \& Future work}
 	\label{sec:discussion_and_future_work}
