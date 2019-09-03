@@ -252,16 +252,46 @@
 	to realize the entire pipeline. The evaluation is reported in Euclidean distance between 
 	the predicted position and the truth, using the model that achieves the best performance 
 	during $100$ epochs, by which the loss mostly converges to zero. 
+
+	We compare our proposed model to four different approaches such as: 
+	\begin{itemize}
+		\item \emph{$2$X Heuristic}: 
+		The prediction on \emph{Head} within a modular team is performed by doubling the vector 
+		$\vec{p}_{F} - \vec{p}_{T}$.
 		
+		\item \emph{FC}: 
+		Two fully connected layers run in the predictor without considering historical 
+		information, which is based on \cite{Choi17}.  
+				
+		\item \emph{LSTM-FC}: 
+		Model combining the historical LSTM and FC layers similar to \emph{IPY-Net} except that 
+		all inputs and outputs are represented as numerical values instead of images. 
+		
+		\item \emph{I-LSTM-FC}: 
+		Imaginative model using the same structure as \emph{IPY-Net} with difference that 
+		only best predictions on coordinates or orientation are preserved from each predicted image. 
+		As needed, the preserved information is processed to generate a new image input during 
+		relay prediction process.
+	\end{itemize}	
+
 %	\subsection{Data collection} 
 %	\label{sec:data_collection}
 	
 	
-	\subsection{Results} 
-	\label{sec:results}
+%	\subsection{Results} 
+%	\label{sec:results}
+	
+	\subsection{Overall accuracy}
+	\label{sec:overall_performance}
 	
 	
-	\subsubsection{Qualitative analysis} 
+	\subsection{Scalability}
+	\label{sec:scalability}
+	
+	Here, we highlight the behavior of 
+	
+	
+	\subsection{Qualitative analysis} 
 	\label{sec:qualitative_analaysis} 
 
 %	Specifically, the position information is projected onto a two
