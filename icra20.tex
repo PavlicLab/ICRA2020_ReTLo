@@ -198,15 +198,71 @@
 	\section{Method}
 	\label{sec:method}
 	
+	
 	\section{Experiments} 
 	\label{sec:experiments} 
 	
-	\subsection{Data collection} 
-	\label{sec:data_collection}
+	
+	\begin{table}[]
+		\label{table:data_description}
+		\begin{tabular}{|c|c|c|c|c|}
+			\hline
+						&  Duration & Num. of Samples & Num. of Instances  \\ \hline
+			$3$ robots & $120$ minutes & $2,000$ & $500$  \\ \hline
+			$5$ robots & $60$ minutes  & $1,000$ & $250$  \\ \hline
+		\end{tabular}
+		\caption{Description of data collected from executions of $3$-robot and $5$-robot teams.}
+	\end{table}
+	
+	
+	To demonstrate the effectiveness of our method, we employ a physical robotic platform, 
+	\emph{Thymio} \cite{Shin14}, which allows to execute a team of small two-wheeled mobile robots.   
+	We use a central computer connected with a overhead camera to simulate better proximity 
+	sensors, a more powerful computing power, and a GPS system that would easily run on each robot in 
+	real scenarios. The central system is set up to detect the locations of robots in real time 
+	and communicate with a \emph{Raspberry Pi} board \cite{Upton14} on each robot to send
+	the next command relying on its neighbors. Although the experiment configuration involves 
+	such external computations and sensors due to limited capability of \emph{Thymio}, 
+	most of realistic assumptions hold, and the robots are still influenced by 
+	physical constraints and disturbance in motion. For better understanding of readers, 
+	we submit a supplementary video. 
+	
+	The location detection is performed at $4$ frames per second at each of which 
+	a new command is received by each robot. Also, 
+	all coordinates and orientations at $2$ frames per second are collected, which 
+	is not necessarily synchronized with the command timing. 
+	
+	Two different sizes of robot team are deployed throughout following experiments: 
+	$3$~robots and $5$~robots in which the \emph{Head} robot continues to receive a command to 
+	move to an arbitrary destination point nearby. 
+	Table~\ref{table:data_description} shows details about the data collected from 
+	each configuration where a sample refers to a set of coordinates and orientations recorded 
+	at an instant time step, and an instance is a sequence of samples for $13$ seconds. 
+	The instances are clustered to have at least $7$-second time gap to another so that
+	the motions between separate ones have only little dependency. 
+	
+	$70$\% data from the $3$-robot team is used to train \emph{IPY} by feeding each sample, 
+	and the rest $20$\% is used for test. 
+	The trained model is also tested with the $5$-robot team, in which the relay prediction is 
+	initialized at the beginning of each instance. 
+	The length of history is set to $5$~seconds to accept inputs for past $10$~time steps, and 
+	the predictions occur for the next $8$~seconds.  
+	 	
+	\emph{IPY} is implemented in \emph{Tensorflow} \emph{Python} library \footnote{https://www.tensorflow.org/} 
+	to realize the entire pipeline. The evaluation is reported in Euclidean distance between 
+	the predicted position and the truth, using the model that achieves the best performance 
+	during $100$ epochs, by which the loss mostly converges to zero. 
+		
+%	\subsection{Data collection} 
+%	\label{sec:data_collection}
+	
 	
 	\subsection{Results} 
 	\label{sec:results}
 	
+	
+	\subsubsection{Qualitative analysis} 
+	\label{sec:qualitative_analaysis} 
 
 %	Specifically, the position information is projected onto a two
 %	dimensional vector as an image, while orientation is on a one dimensional vector.
