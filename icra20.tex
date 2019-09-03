@@ -71,13 +71,13 @@
 	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 	\begin{abstract}
 		
-		We propose \emph{IPY}, as an extension of \cite{Choi17}, to tackle the Remote Teammate 
+		We propose \emph{IPY-Net}, as an extension of \cite{Choi17}, to tackle the Remote Teammate 
 		Localization (RTL) problem where a robot embedded in a multi-robot team is to predict positions 
 		of all other teammates when each robot has a limited sensor radius and a 
 		relatively simple motion rule with dependency on the position of its nearest neighbors. 
 		The previous work presented feasibility of a scalable machine learning approach for the 
 		predicting robot to proactively assist a team behavior in caging scenario. 
-		In this work, \emph{IPY} is designed to improve scalability by taking into account
+		In this work, \emph{IPY-Net} is designed to improve scalability by taking into account
 		physical constraints on the team formation as well as producing probabilistic predictions  
 		in the form of image through deep learning pipeline.
 		Furthermore, while we previously relied only on computer simulations, 
@@ -128,12 +128,12 @@
 	%
 	\begin{figure}\centering
 		\includegraphics[width=1.\columnwidth]{fig_Concept}
-		\caption{Example of \emph{IPY} performing RTL on $6$-robot team. 
+		\caption{Example of \emph{IPY-Net} performing RTL on $6$-robot team. 
 			While the \emph{Head} (red) is driving 
 			the team in line formation, the \emph{Tail} can observe the motions of 
 			\emph{Follower 1} (purple) within its sensor radius (yellow).
 			The observation, $O$, and the historical positions of all robots, $h$, that
-			the \emph{Tail} has known so far become an input to \emph{IPY} to pro 
+			the \emph{Tail} has known so far become an input to \emph{IPY-Net} to pro 
 			All positions of robots in the local view of \emph{Tail} are visualized in 
 			image as probabilistic representation. Note here that since \emph{Follower 4} 
 			can be observed directly, the image representation does not illustrate any
@@ -143,16 +143,16 @@
 	\end{figure}
 	%
 	
-	In this work, we propose \emph{IPY} to significantly reduce prediction errors solving 
+	In this work, we propose \emph{IPY-Net} to significantly reduce prediction errors solving 
 	the RTL problem, which would allow to gain stable performance even with more robots added. 
-	\emph{IPY} runs a deep neural network as a backbone, 
+	\emph{IPY-Net} runs a deep neural network as a backbone, 
 	first to consider physical constraints on the sequential change of team formation and, 
 	second to use a probabilistic representation in the form of image for obtained observations and 
 	new predictions. Specifically, every observed or predicted position is 
 	encoded as an image in which the summation of all values must be $1$, which can be
 	viewed as a probability distribution of position of the robot. Hence,
-	\emph{IPY} learns how to synthesize inputs with some uncertainty to produce a probabilistic 
-	prediction outcome in end-to-end fashion. Furthermore, a recurrent layer is deployed in \emph{IPY}, 
+	\emph{IPY-Net} learns how to synthesize inputs with some uncertainty to produce a probabilistic 
+	prediction outcome in end-to-end fashion. Furthermore, a recurrent layer is deployed in \emph{IPY-Net}, 
 	which enables the model to take into account possible evolution of 
 	team formation based on recent history and reduce the searching space for predicted solution. 
 	With all combined, historical probabilistic (soft) formations are used as input per prediction
@@ -168,7 +168,7 @@
 	This paper is organized as follow. 
 	In Section~\ref{sec:related_work}, we explore related literature and the distinction of our work. 
 	Section~\ref{sec:problem_description} explains more details about our setting of RTL problem. 
-	Then, we introduce our method, \emph{IPY}, in Section~\ref{sec:method}, and 
+	Then, we introduce our method, \emph{IPY-Net}, in Section~\ref{sec:method}, and 
 	Section~\ref{sec:experiments} explains details about experiments performed on real robots, 
 	including data collection, hyperparameters used for learning, and the results. 
 	Lastly, we summarize our research and discuss future directions 
@@ -180,7 +180,7 @@
 		%
 	\begin{figure*}\centering
 		\includegraphics[width=1.8\columnwidth]{fig_DL_Pipeline}
-		\caption{Structure of \emph{IPY}. This is an snapshot example when applied to a focused module of
+		\caption{Structure of \emph{IPY-Net}. This is an snapshot example when applied to a focused module of
 			$3$~robots, called \emph{Tail, Follower, Head} within it, at time $t$. 
 			The Encoder-Decoder structure encodes
 			1) historical positions and orientations of \emph{Follower} and \emph{Head} 
@@ -241,14 +241,14 @@
 	The instances are clustered to have at least $7$-second time gap to another so that
 	the motions between separate ones have only little dependency. 
 	
-	$70$\% data from the $3$-robot team is used to train \emph{IPY} by feeding each sample, 
+	$70$\% data from the $3$-robot team is used to train \emph{IPY-Net} by feeding each sample, 
 	and the rest $20$\% is used for test. 
 	The trained model is also tested with the $5$-robot team, in which the relay prediction is 
 	initialized at the beginning of each instance. 
 	The length of history is set to $5$~seconds to accept inputs for past $10$~time steps, and 
 	the predictions occur for the next $8$~seconds.  
 	 	
-	\emph{IPY} is implemented in \emph{Tensorflow} \emph{Python} library \footnote{https://www.tensorflow.org/} 
+	\emph{IPY-Net} is implemented in \emph{Tensorflow} \emph{Python} library \footnote{https://www.tensorflow.org/} 
 	to realize the entire pipeline. The evaluation is reported in Euclidean distance between 
 	the predicted position and the truth, using the model that achieves the best performance 
 	during $100$ epochs, by which the loss mostly converges to zero. 
@@ -286,13 +286,13 @@
 	\section{Discussion \& Future work}
 	\label{sec:discussion_and_future_work}
 	
-	We have shown \emph{IPY}, a powerful approach to tackle the remote localization problem 
+	We have shown \emph{IPY-Net}, a powerful approach to tackle the remote localization problem 
 	where a robot with limited sensors is to predict positions of all others only using 
 	observations about its nearest neighbor. 
-	\emph{IPY} follow the fundamental spirit of \cite{Choi17} to apply a predictor 
+	\emph{IPY-Net} follow the fundamental spirit of \cite{Choi17} to apply a predictor 
 	trained for a small robot team to a chain of them in a larger team, since it 
 	can provide a scalable feature without re-training.   
-	The distinction in \emph{IPY} is , however, to use a sequence of historical knowledge and 
+	The distinction in \emph{IPY-Net} is , however, to use a sequence of historical knowledge and 
 	make predictions based on imagination of robot states including position and orientation.
 	We expected learning with history would help regulate the model on physical constraints on 
 	the team formation, and also the imaginative representation could contain 
