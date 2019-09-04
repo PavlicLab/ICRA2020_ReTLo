@@ -24,6 +24,7 @@
 \usepackage{amssymb}
 \usepackage{graphicx}
 \usepackage{caption}
+\usepackage{amsmath}
 \DeclareCaptionFont{eightpt}{\fontsize{8pt}{9pt}\selectfont #1}
 \captionsetup{font=eightpt}
 
@@ -197,10 +198,10 @@
 	\section{Problem Description} 
 	\label{sec:problem_description}
 	
-	We basically follow the problem configurations for remote teammate localization introduced in 
-	\cite{Choi17}. A robot team moves in a line formation in which each robot has 
+	Basically, we follow the problem configurations for remote teammate localization introduced in 
+	\cite{Choi17}. A robot team moves in a line formation in which	each robot has 
 	two adjacent neighbors except for the ones at both ends, each of which has only one neighbor. 
-	The robot on one end is the only robot that moves to a 
+	The robot on one end is the only robot that tries to move to a 
 	predetermined destination independent from its neighbor. The robot is called 
 	\emph{Head}, and the robot on the opposite end is named \emph{Tail}. 
 	All the robots in-between are \emph{Follower}~$i$ where $i \in \{1, 2, ..., n-1\}$ starting
@@ -208,11 +209,11 @@
 	
 	All the robots are set to take actions as formulated in \cite{Choi17} leading  
 	the \emph{Follower} robots and the \emph{Tail} to behave based on the 
-	positions of their close neighbors. As will be explained in 
-	Section~\ref{sec:experiments}, we borrow the computational, sensory capacity of a central 
-	computer in experiments, Thus, technically the global positions are used to calculate the next 
-	destination of each robot, and then the formula in [] helps generate an actual motion command to 
-	operate two wheels according to nonholonomic kinematics. 
+	current positions of their close neighbors. As will be explained in 
+	Section~\ref{sec:experiments}, we utilize the computational, sensory capacity of a central 
+	computer in experiments. Therefore, technically the global positions are used to calculate the next 
+	spatial destination of each robot, and then the formula in [] helps generate an actual motion 
+	command to operate two wheels to change its pose according to nonholonomic kinematics. 
 	
 	The remote teammate localization is to localize all the teammates in the view of 
 	\emph{Tail} only using locally visible information, which is the position of 
@@ -228,6 +229,54 @@
 	
 	\section{Method}
 	\label{sec:method}
+	
+	We refer to the inference scheme of our previous work \cite{Choi17} in which 
+	a regressor is trained in a short line of $3$ robots, and when employed for a larger team, 
+	relaying pose estimations are performed along with the chain of $3$-robot modular teams. 
+	
+	delay, 
+
+
+	\subsection{Imaginative representation} 
+	\label{sec:imaginative_representation}
+	
+	\emph{IPY-Net} is designed to produce probabilistic prediction outcomes that contain 
+	uncertainty to some level. Specifically, the training process is to encourage to learn 
+	the probability distribution on predicted position or orientation. 
+	Furthermore, during relaying prediction, the model has to be able to understand 
+	the probability distribution predicted at a previous $3$-robot module to 
+	make prediction for the current one.  
+	
+	To be specific, \emph{IPY-Net} adopts a $m \times m$ matrix, which is an image, and 
+	a $1 \times k$ matrix to represent position and orientation, respectively. Because  
+	each matrix is a probability distribution, the summation of all elements must be $1$. 
+	For example, an observed $x$ coordinate is first converted by Equation~\ref{eq:x_conversion}.
+	
+	\begin{equation}
+	\label{eq:x_conversion}
+		x' = \frac{x - x_{min}}{x_{max} - x_{min}} \times m - \frac{m}{2}
+	\end{equation}
+	
+	where $x_{min}$ and $x_{max}$ are the minimum and maximum of $x$ coordinates
+	empirically observed. $y'$ can be calculated from a $y$ coordinate in a similar way. 
+	Then, the position matrix $M_p$ initialized with zeros is updated 
+	
+	\begin{equation}
+		\begin{aligned}
+		M_{p}(\lfloor{x'}\rfloor, \lfloor{y'}\rfloor) \\
+		M_{p}(\lfloor{x'}\rfloor+1, \lfloor{y'}\rfloor) \\
+		M_{p}(\lfloor{x'}\rfloor, \lfloor{y'}\rfloor+1) \\
+		M_{p}(\lfloor{x'}\rfloor+1, \lfloor{y'}\rfloor+1) 
+		\end{aligned}
+	\end{equation} 
+	
+	We use the image representation, since it allows to learn an arbitrary probability distribution 
+	instead of a known distribution constrained on a set of parameters.
+	
+	
+	\subsection{IPY-Net pipeline}
+	\label{sec:ipy-net_pipeline}
+	 
 	
 	
 	\section{Experiments} 
