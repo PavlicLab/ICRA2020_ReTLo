@@ -197,6 +197,35 @@
 	\section{Problem Description} 
 	\label{sec:problem_description}
 	
+	We basically follow the problem configurations for remote teammate localization introduced in 
+	\cite{Choi17}. A robot team moves in a line formation in which each robot has 
+	two adjacent neighbors except for the ones at both ends, each of which has only one neighbor. 
+	The robot on one end is the only robot that moves to a 
+	predetermined destination independent from its neighbor. The robot is called 
+	\emph{Head}, and the robot on the opposite end is named \emph{Tail}. 
+	All the robots in-between are \emph{Follower}~$i$ where $i \in \{1, 2, ..., n-1\}$ starting
+	from the robot closest to the \emph{Tail}.
+	
+	All the robots are set to take actions as formulated in \cite{Choi17} leading  
+	the \emph{Follower} robots and the \emph{Tail} to behave based on the 
+	positions of their close neighbors. As will be explained in 
+	Section~\ref{sec:experiments}, we borrow the computational, sensory capacity of a central 
+	computer in experiments, Thus, technically the global positions are used to calculate the next 
+	destination of each robot, and then the formula in [] helps generate an actual motion command to 
+	operate two wheels according to nonholonomic kinematics. 
+	
+	The remote teammate localization is to localize all the teammates in the view of 
+	\emph{Tail} only using locally visible information, which is the position of 
+	\emph{Follower}~$1$ at every time step. We assume that until a specific time instant 
+	$t$, all the information about positions and orientations of all robots 
+	were shared with the \emph{Tail} robot, but from $t+1$, such information is no longer 
+	available causing a need of the localization approach utilizing local observations.	
+	This may simulate some realistic scenarios where 
+	an external technical issue occurs at some time point disabling the information 
+	transfer, or the robot team intentionally stops the communication at some regions for security 
+	or for saving on the cost.
+	 
+	
 	\section{Method}
 	\label{sec:method}
 	
