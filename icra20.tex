@@ -188,7 +188,8 @@
 	%
 	\begin{figure}\centering
 		\includegraphics[width=1.\columnwidth]{fig_DL_Pipeline}
-		\caption{Structure of \emph{IPY-Net}. This is an snapshot example when applied to a focused module of
+		\caption{Structure of our proposed deep neural network. 
+			This is an snapshot example when applied to a focused module of
 			$3$~robots, called \emph{Tail, Follower, Head} within it, at time $t$. 
 			The Encoder-Decoder structure encodes
 			1) historical positions and orientations of \emph{Follower} and \emph{Head} 
@@ -204,16 +205,47 @@
 	\section{Related work}
 	\label{sec:related_work}
 	
-	Byranvan et al. in \cite{Byravan17} proposed a deep neural network to predict the next visual 
-	frame given a current frame and the information of force that affects one of the shown objects.
-	The suggested \emph{SE3-Nets} is to understand the dynamics of 
-	objects depending on the force executed. Because \emph{IPY-Net} also learns mapping 
-	behaviors of a robot to the evolution of team formation, it has a similar structure of 
-	deep neural network. \emph{IPY-Net}, however, deals with a multi robotic scenario where  
-	it has to be able to utilize the observed information to infer a dependent change of 
-	a far robot.  
+	Although the RTL problem is to localize robots, as mentioned in Sec.~\ref{sec:intro}, 
+	it has unique properties compared to traditional localization problems including
+	cooperative localization. Rather, 
+
+	\subsection{Group state recognition}
+	\label{sec:group_state_recognition}
+
+
+	\subsection{Behavioral cue interpretation}
+	\label{sec:behavioral_cue_interpretation}
+	high five with robot 
 	
-	The most motivating work is in \cite{CPR17} is the most similar to 
+	\subsection{Dynamics learning}
+	\label{sec:dynamics_learning}
+	
+	Byranvan and Fox in \cite{BF17} proposed a deep learning approach 
+	to predict the next visual frame given a current frame and the information 
+	of force that affects one of the shown objects. The suggested \emph{SE3-Nets} is 
+	to understand the dynamics of objects and the relationship with forces 
+	possibly executed. In the RTL problem also, the \emph{Tail} robot may have known 
+	a global shape of robot team, and it has to be able to predict the future 
+	formation as a new observation on its neighbor is provided, which would encode 
+	the information of an unseen force driving the team. Such a similarity inspired 
+	the architecture of our neural network model, but they focused on learning 
+	motions of a rigid object, while a chain of robots in our work can present 
+	much flexibility in team shape. In addition, the force is inferred by 
+	movements of the neighbor, which would likely contain noise to some level, while 
+	\emph{SE3-Nets} is provided with clear information about the applied force.  
+	
+	This work is an extension of our previous work in \cite{CPR17} in which 
+	the configurations for RTL problem were first introduced with realistic assumptions. 
+	To solve the problem particularly with little communication, 
+	the \emph{Tail} robot is designed to use a repetitive strategy of inference 
+	with which the predictions on a closer robots are used as input to 
+	prediction for more distant team members. Such an approach enables to scale 
+	up the prediction capability without further training as more robots are added.
+	Albeit we use the same prediction scheme with repetition, here we focus 
+	more on developing a more powerful regressor to broaden applicability and 
+	also demonstrating the performance in a multi-robot team implemented on 
+	real robotic platform. 
+	
 	
 	\section{Problem Description} 
 	\label{sec:problem_description}
