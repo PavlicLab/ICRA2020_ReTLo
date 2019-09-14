@@ -205,9 +205,18 @@
 	\section{Related work}
 	\label{sec:related_work}
 	
-	Although the RTL problem is to localize robots, as mentioned in Sec.~\ref{sec:intro}, 
-	it has unique properties compared to traditional localization problems including
-	cooperative localization or tracking \cite{LSRB16, FSDO10, CX14, DMG15}. Rather, 
+	Although the RTL problem is to localize robots, as mentioned in 
+	Section~\ref{sec:intro}, it has unique properties compared to conventional 
+	localization problems including	cooperative localization or tracking 
+	\cite{LSRB16, FSDO10, CX14, DMG15}. 
+	It is rather about robot behavior as a container to 
+	represent useful team-level state and learning to decode it.
+	We discuss related literature below that introduced scenarios to use and decrypt 
+	robot behaviors in multi-robot system, followed by a comparison with a work 
+	that exploited deep learning to learn dynamics of robot on presentation 
+	of force input. 
+	Lastly, we explain similarities to our previous work as well as main 
+	contributions as an extension.  
 
 	\subsection{Group state recognition}
 	\label{sec:group_state_recognition}
@@ -253,17 +262,17 @@
 	movements of the neighbor, which would likely contain noise to some level, while 
 	\emph{SE3-Nets} is provided with clear information about the applied force.  
 	
-	This work is an extension of our previous work in \cite{CPR17} in which 
-	the configurations for RTL problem were first introduced with realistic assumptions. 
-	To solve the problem particularly with little communication, 
+	In our previous work \cite{CPR17}, the detailed configurations for RTL 
+	problem were first introduced with realistic assumptions. 
+	To solve the problem particularly with little robot-to-robot communication, 
 	the \emph{Tail} robot is designed to use a repetitive strategy of inference 
-	with which the predictions on a closer robots are used as input to 
+	with which the predictions on a closer robot are used as input to 
 	prediction for more distant team members. Such an approach enables to scale 
-	up the prediction capability without further training as more robots are added.
-	Albeit we use the same prediction scheme with repetition, here we focus 
+	up the estimation capability without further training even though more robots are 
+	added. Albeit we use the same prediction scheme with repetition, here we focus 
 	more on developing a more powerful regressor to broaden applicability and 
-	also demonstrating the performance in a multi-robot team implemented on 
-	real robotic platform. 
+	also on performing realistic evaluations in a multi-robot system realized on 
+	an off-the-shelf robotic platform. 
 	
 	
 	\section{Problem Description} 
