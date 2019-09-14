@@ -278,20 +278,20 @@
 	\section{RTL Problem} 
 	\label{sec:rtl_problem}
 	
-	Basically, we follow the problem description for remote teammate localization
+	Basically, we follow the problem description for the RTL
 	first introduced in \cite{CPR17}. A robot team moves in a line formation 
-	in which each robot has two adjacent neighbors except for the ones at both ends, 
-	which has only one neighbor. 
+	in which each robot has two adjacent neighbors except for the ones at the ends, 
+	each of which has only one neighbor. 
 	The robot on one end is called \emph{Head}, which is the only robot that 
 	drives the team toward a destination predetermined in an independent manner.
 	The robot on the opposite end is named \emph{Tail}, and all other robots 
 	in-between are \emph{Follower}~$i$ where $i \in \{1, 2, ..., n-2\}$ starting
-	from the robot closest to the \emph{Head}.
-	Each robot has the same capability of sensor and motion under the same 
+	from the robot closest to the \emph{Tail}.
+	Every robot has the same capability of sensor and motion under the same 
 	kinematic constraints, although they may take different actions according to 
 	motion rules depending on their roles, as formulated in \cite{CPR17}. This catalyzes the
 	 \emph{Follower} robots and the \emph{Tail} to behave based on the current positions of their close neighbors. For simplicity, we assume that every robot 
-	 has an ability to accelerate fast enough to always keep the neighbors within its 
+	 has an ability to accelerate fast enough to always keep the neighbors within their 
 	 sensory range.
 %	As will be explained in 
 %	Section~\ref{sec:experiments}, we utilize the computational, sensory capacity of a central 
@@ -299,17 +299,19 @@
 %	spatial destination of each robot, and then the formula in [] helps generate an actual motion 
 %	command to operate two wheels to change its pose according to nonholonomic kinematics. 
 	
-	The RTL is to localize all the teammates in the view of 
+	The RTL is to localize all the teammates from the view of 
 	\emph{Tail} only using locally visible information, which is the position of 
 	\emph{Follower}~$1$ at every time step. We assume that until a specific time instant 
 	$t$, all the information about positions and orientations of all robots 
-	have been shared with the \emph{Tail} robot, maybe via global communication,
-	but from $t+1$, such information is no longer available causing a need of the
-	localization approach only utilizing local observations.	
+	have been shared especially with the \emph{Tail} robot, 
+	possibly via global communication,
+	but from $t+1$, such information becomes no longer available causing a need of the
+	localization technique only utilizing local observations.	
 	This may simulate some realistic scenarios where 
-	an unexpected technical issue occurs at a time point disabling any data
-	transfer, or the robot team intentionally stops the information sharing entering 
-	some regions for security or for saving on the communication cost.
+	an unexpected technical issue occurs at a time point disabling any robot-to-robot
+	data	transfer, or the robot team intentionally stops the information 
+	sharing when entering some specific regions either for security or for saving on the
+	 communication cost.
 	 
 	
 	\section{Method}
