@@ -353,80 +353,67 @@
 			\hline
 						&  Duration & Num. of Samples & Num. of Instances  \\ \hline
 			$3$ robots & $100.6$ minutes & $6,975$ & $465$  \\ \hline
-			$5$ robots & $45.0$ minutes  & $3,120$ & $208$  \\ \hline
+			$5$ robots & $45.0$ minutes  & $8,736$ & $208$  \\ \hline
 		\end{tabular}
 		\caption{Description of data collected from executions of $3$-robot and $5$-robot teams.}
 	\end{table}
-
-%	\begin{table}[]
-%		\label{table:overall_performance}
-%		\centering
-%		\begin{tabular}{|c|c|c|}
-%			\hline
-%			&  $3$ robots & $5$ robots  \\ \hline
-%			Avg Distance & $20.0$ & $30.0$  \\ \hline
-%		\end{tabular}	
-%		\caption{Description of data collected from executions of $3$-robot and $5$-robot teams.}
-%	\end{table}
 	
 	
 	To demonstrate the effectiveness of our method, we employ a physical robotic platform, 
-	\emph{Thymio} \cite{Shin14}, which allows to execute a team of small two-wheeled mobile robots.   
-	We use a central computer connected with a overhead camera to simulate better proximity 
+	\emph{Thymio} \cite{Shin14}, which allows to execute a team of small two-wheeled 
+	mobile robots. We use a central computer connected with a overhead camera to simulate
+	better proximity 
 	sensors, a more powerful computing power, and a GPS system that would easily run on each robot in 
-	real scenarios. The central system is set up to detect the locations of robots in real time 
+	real scenario. 
+	Specifically, the central system is set up to detect the locations of robots in real
+	time using off-the-shelf computer vision packages 
 	and communicate with a \emph{Raspberry Pi} board \cite{Upton14} on each robot to send
-	the next command relying on its neighbors. Although the experiment configuration involves 
-	such external computations and sensors due to limited capability of \emph{Thymio}, 
-	most of realistic assumptions hold, and the robots are still influenced by 
-	physical constraints and disturbance in motion. For better understanding of readers, 
+	the next command relying on its neighbors. 
+	The command was essentially obtained based on the formulation in \cite{CPR17}, but 
+    as the robot was asked to move backward, we just set it not to move for its 
+	neighbor behind to catch it up, which helped gain smoother trajectories of the team
+	and eventually avoid possible collisions between robots. 
+	
+	Although the experiment setting involves 
+	some external computations and sensors due to limited capability of \emph{Thymio}, 
+	most of realistic assumptions still hold from the physical constraints and disturbance
+	during execution. For better understanding of readers on the prepared environment, 
 	we submit a supplementary video. 
 	
-	The location detection is performed at $4$ frames per second at each of which 
-	a new command is received by each robot. Also, 
-	all coordinates and orientations at $2$ frames per second are collected, which 
-	is not necessarily synchronized with the command timing. 
+	Finally, we collected the pose data from two robot teams, one of $3$~robots and one 
+	of $5$~robots, that ran separately in an arena of $2.5 m \times 1.9 m$.  
+	The location detection was performed at $4$ frames per second at each of
+	which a new command was received by each robot. Also, all pose data was 
+	collected at the rate of $2$ frames per second, 
+	which was not necessarily synchronized with the command timing. 
+	We set the length of history to $5$~seconds ($10$~time steps in data recording) and 
+	the time window for prediction to the next $8$~seconds ($16$~time steps).  
+	Table~\ref{table:data_description} provides details about the collected data
+	where a sample refers to a set of coordinates and orientations in a subteam 
+	with which a prediction can be performed, and an instance is set of all available samples for $13$ seconds from the entire team. We clustered recordings so that 
+	an instance has at least $7$-second time gap to another ensuring
+	the motions between separate instances have little dependency. 
 	
-	Two different sizes of robot team are deployed throughout following experiments: 
-	$3$~robots and $5$~robots in which the \emph{Head} robot continues to receive a command to 
-	move to an arbitrary destination point nearby in a $OO \times OO$ meters arena. 
-	Table~\ref{table:data_description} shows details about the data collected from 
-	each configuration where a sample refers to a set of coordinates and orientations recorded 
-	at an instant time step, and an instance is a sequence of samples for $13$ seconds. 
-	The instances are clustered to have at least $7$-second time gap to another so that
-	the motions between separate ones have only little dependency. 
+	$60$\% data from the $3$-robot team is used to train our model, and another $10\%$
+	was set aside for validation. At each epoch of training, a validation followed so that
+	the learned weights that achieved the best validation performance were saved. 
+	The rest of $20\%$ data and all the data from $5$-robot were used to test the model.
 	
-	$70$\% data from the $3$-robot team is used to train \emph{IPY-Net} by feeding each sample, 
-	and the rest $20$\% is used for test. 
-	The trained model is also tested with the $5$-robot team, in which the relay prediction is 
-	initialized at the beginning of each instance. 
-	The length of history is set to $5$~seconds to accept inputs for past $10$~time steps, and 
-	the predictions occur for the next $8$~seconds.  
-	 	
-	\emph{IPY-Net} is implemented in \emph{Tensorflow} \emph{Python} library \footnote{https://www.tensorflow.org/} 
-	to realize the entire pipeline. The evaluation is reported in Euclidean distance between 
-	the predicted position and the truth, using the model that achieves the best performance 
-	during $100$ epochs, by which the loss mostly converges to zero. 
-
-	We compare our proposed model to four different approaches such as: 
+	Our model is implemented in \emph{Tensorflow} \emph{Python} library \footnote{https://www.tensorflow.org/} 
+	to realize the entire pipeline, and it was trained to minimize 
+	loss functions such as Euclidean distance and mean absolute errors 
+	for position and orientation estimation, respectively.
+	
+	We compare our proposed model to two different approaches such as: 
 	\begin{itemize}
 		\item \emph{$2$X Heuristic}: 
-		The prediction on \emph{Head} within a modular team is performed by doubling the vector 
+		The prediction on \emph{Head} within a modular subteam is performed by doubling the vector 
 		$\vec{p}_{F} - \vec{p}_{T}$.
 		
 		\item \emph{FC}: 
-		Two fully connected layers run in the predictor without considering historical 
+		Two fully connected layers run in the predictor without historical 
 		information, which is based on \cite{CPR17}.  
-				
-		\item \emph{LSTM-FC}: 
-		Model combining the historical LSTM and FC layers similar to \emph{IPY-Net} except that 
-		all inputs and outputs are represented as numerical values instead of images. 
-		
-		\item \emph{I-LSTM-FC}: 
-		Imaginative model using the same structure as \emph{IPY-Net} with difference that 
-		only best predictions on coordinates or orientation are preserved from each predicted image. 
-		As needed, the preserved information is processed to generate a new image input during 
-		relay prediction process.
+	
 	\end{itemize}	
 
 %	\subsection{Data collection} 
