@@ -45,9 +45,9 @@
 
 
 \title{\LARGE \bf
-	I Picture You: \\
-	Imaginative localization on remote teammates
-}
+	Learning longer behavioral sequences in a modular robot team  
+	to better infer global formation
+}    
 % Automated synthesis of scalable algorithms for inferring non-local
 %properties to assist in multi-robot teaming
 
@@ -72,18 +72,26 @@
 	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 	\begin{abstract}
 		
-		We propose \emph{IPY-Net}, as an extension of \cite{Choi17}, to tackle the Remote Teammate 
-		Localization (RTL) problem where a robot embedded in a multi-robot team is to predict positions 
-		of all other teammates when each robot has a limited sensor radius and a 
-		relatively simple motion rule with dependency on the position of its nearest neighbors. 
-		The previous work presented feasibility of a scalable machine learning approach for the 
-		predicting robot to proactively assist a team behavior in caging scenario. 
-		In this work, \emph{IPY-Net} is designed to improve scalability by taking into account
-		physical constraints on the team formation as well as producing probabilistic predictions  
-		in the form of image through deep learning pipeline.
-		Furthermore, while we previously relied only on computer simulations, 
-		all experiments in this work are performed in a physical robotic platform, \emph{Thymio}, 
-		to demonstrate the performance gain in more realistic environments. 
+		We propose a more powerful machine learning approach, as an extension of \cite{Choi17},
+		to tackle the Remote Teammate
+		Localization (RTL) problem where a robot member in a multi-robot team is to predict positions
+		of all other teammates only using the observations on its nearest neighbor without any
+		communication between robots.
+		%        In the previous work, we followed a realistic configuration
+		%        in which each robot had a limited sensor radius
+		%        As each robot had a relatively simple motion rule with dependency on its nearest neighbors,
+		In the previous work, we showed feasibility of a scalable method by which
+		a predictor robot was trained in a modular 3-robot team but could extend the prediction
+		to a larger
+		team without additional training, also suggesting an application of such an inference in
+		caging mission.         
+		In this work, however, we focus mainly on 1) achieving better performance
+		to improve the applicability and 2) conducting evaluation in
+		more realistic environments. To be specific, we adopt a Long-Short Term Memory (LSTM)
+		to learn possible evolution of behaviors in a modular team helping reduce the errors
+		from regression outcomes. Furthermore, while the previous work relied only on computer simulations,
+		all the experiments here are conducted on a physical two-wheeled robotic platform, \emph{Thymio},
+		to demonstrate the performance gain under realistic constraints.
 		
 	\end{abstract}
 	
