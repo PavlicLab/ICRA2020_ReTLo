@@ -511,10 +511,18 @@
 	
 	\begin{figure*}[t]
 		\centering
-		\includegraphics[width=1.8\columnwidth]{fig_preds}
-		\caption{Visualized predicted heatmap examples generated from \emph{IPY-Net}. 
-			Each row contains snapshots of three instant time steps during a unique 
-			instance. In each instance, the frames are sorted in increasing order in time. 			 
+		\includegraphics[width=2.\columnwidth]{fig_preds}
+		\caption{Sample frames with prediction results of our proposed model 
+			for three different instances of $5$~robot team.
+			Each row presents frames of an instance at after $1, 3, 5,$ and $7$ seconds.  
+			The yellow robot is \emph{Tail}, the pink is \emph{Head}, and
+			in-between are \emph{Follower} robots. 
+			The colored circles are predicted position outputs, in each 
+			of which a black arrow is drawn to indicate the predicted orientation as well. 
+			The colored triangles with a black line through the center are the 
+			results of localization detection used in data collection stage. 
+			A small red dot on the arena in each frame is the random destination the 
+			\emph{Head} is moving toward, which is resampled at intervals. 
 		}
 		\label{fig:preds}
 	\end{figure*}
@@ -523,7 +531,9 @@
 	\subsection{Qualitative results} 
 	\label{sec:qualitative_results} 
 
-	This section visualizes the prediction outcomes of \emph{IPY-Net}, while the robot team
+	Figure~\ref{fig:preds} displays both the true positions of all robots and the predictions on 
+	them. 
+	the prediction outcomes of \emph{IPY-Net}, while the robot team
 	evolves its shape over time. Figure~\ref{fig:heatmap} displays three separate instances in which 
 	the generated heatmaps are overlaid on the corresponding original video frames illustrating 
 	the predicted probability distribution of the team-level formation. 
