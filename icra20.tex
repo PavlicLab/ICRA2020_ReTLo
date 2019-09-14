@@ -280,9 +280,8 @@
 	
 	Basically, we follow the problem description for remote teammate localization
 	first introduced in \cite{CPR17}. A robot team moves in a line formation 
-	in which	each robot has 
-	two adjacent neighbors except for the ones at both ends, which has only one 
-	neighbor. 
+	in which each robot has two adjacent neighbors except for the ones at both ends, 
+	which has only one neighbor. 
 	The robot on one end is called \emph{Head}, which is the only robot that 
 	drives the team toward a destination predetermined in an independent manner.
 	The robot on the opposite end is named \emph{Tail}, and all other robots 
@@ -291,7 +290,9 @@
 	Each robot has the same capability of sensor and motion under the same 
 	kinematic constraints, although they may take different actions according to 
 	motion rules depending on their roles, as formulated in \cite{CPR17}. This catalyzes the
-	 \emph{Follower} robots and the \emph{Tail} to behave based on the current positions of their close neighbors. 
+	 \emph{Follower} robots and the \emph{Tail} to behave based on the current positions of their close neighbors. For simplicity, we assume that every robot 
+	 has an ability to accelerate fast enough to always keep the neighbors within its 
+	 sensory range.
 %	As will be explained in 
 %	Section~\ref{sec:experiments}, we utilize the computational, sensory capacity of a central 
 %	computer in experiments. Therefore, technically the global positions are used to calculate the next 
@@ -314,15 +315,26 @@
 	\section{Method}
 	\label{sec:method}
 	
-	We refer to the inference scheme of our previous work \cite{CPR17} in which 
-	a regressor is trained in a short line of $3$ robots, and when employed for a larger team, 
-	relaying pose estimations are performed along with the chain of $3$-robot modular teams. 
+	In this section, we introduce more details about our method. First, 
+	we briefly revisit the prediction approach, shown in \cite{CPR17}, 
+	to train the model on a small team and make predictions on a larger team 
+	without additional training. 
+	Then, we present the regressor to learn not only on observations on 
+	the neighbor but also on a sequence of past team formations.
 	
 	delay, 
 
 
-	\subsection{Imaginative representation} 
-	\label{sec:imaginative_representation}
+	\subsection{Scalable prediction} 
+	\label{sec:scalable_prediction}
+	
+	We refer to the inference scheme of our previous work \cite{CPR17} in which 
+	a regressor is trained in a modular subteam of $3$ robots, and when employed 
+	for a larger team, repetitive predictions are performed along with the chain 
+	of $3$-robot modular teams until reaching the \emph{Head}. 
+	More specifically, given a robot team of size $n$, the \emph{Tail} robot 
+	is allowed 
+	
 	
 	\emph{IPY-Net} is designed to produce probabilistic prediction outcomes that contain 
 	uncertainty to some level. Specifically, the training process is to encourage to learn 
@@ -358,8 +370,8 @@
 	instead of a known distribution constrained on a set of parameters.
 	
 	
-	\subsection{IPY-Net pipeline}
-	\label{sec:ipy-net_pipeline}
+	\subsection{Neural network}
+	\label{sec:neural_network}
 	 
 	
 	
@@ -379,16 +391,16 @@
 		\caption{Description of data collected from executions of $3$-robot and $5$-robot teams.}
 	\end{table}
 
-	\begin{table}[]
-		\label{table:overall_performance}
-		\centering
-		\begin{tabular}{|c|c|c|}
-			\hline
-			&  $3$ robots & $5$ robots  \\ \hline
-			Avg Distance & $20.0$ & $30.0$  \\ \hline
-		\end{tabular}	
-		\caption{Description of data collected from executions of $3$-robot and $5$-robot teams.}
-	\end{table}
+%	\begin{table}[]
+%		\label{table:overall_performance}
+%		\centering
+%		\begin{tabular}{|c|c|c|}
+%			\hline
+%			&  $3$ robots & $5$ robots  \\ \hline
+%			Avg Distance & $20.0$ & $30.0$  \\ \hline
+%		\end{tabular}	
+%		\caption{Description of data collected from executions of $3$-robot and $5$-robot teams.}
+%	\end{table}
 	
 	
 	To demonstrate the effectiveness of our method, we employ a physical robotic platform, 
