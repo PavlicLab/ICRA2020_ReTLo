@@ -72,7 +72,7 @@
 	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 	\begin{abstract}
 		
-		We propose a more powerful machine learning approach, as an extension of \cite{Choi17},
+		We propose a more powerful machine learning approach, as an extension of \cite{CPR17},
 		to tackle the Remote Teammate
 		Localization (RTL) problem where a robot member in a multi-robot team is to predict positions
 		of all other teammates only using the observations on its nearest neighbor without any
@@ -106,33 +106,40 @@
 	according to relatively simple motion rules. 
 	Such a property enables the entire system to perform in a distributed manner, and 
 	also the behavior of it can be driven easily by a few leader robots to 
-	eventually achieve the goal [x]. 
-	This implies that if a robot has an ability to recognize useful property, e.g.) formation, 
+	eventually achieve the goal \cite{CPR17, DGRSS17, EB16}. 
+	This implies that if a robot has an ability to reognize useful property, e.g.) formation, 
 	of the whole team in real time using its local sensors, 
 	it could present adjustive actions accordingly to better promote a collective behavior 
 	for the sake of the team.
 	
-	In \cite{Choi17}, we suggested a machine learning method to solve the 
-	RTL problem where a robot embedded in a multi-robot team is to predict 
-	positions of all other teammates using only local observations about a single nearby teammate. 
-	Since each robot has a limited sensor radius and a relatively simple motion rule with dependency 
-	on the position of its nearest neighbors in line formation, 
-	the predicting robot has to be able to learn the regularity 
-	of the observed motions. Through simulated experiments, we showed the feasibility of the idea 
-	especially in caging scenario in which the predicting robot could recognize the team behavior and 
-	use a proactive maneuver accordingly. 
+	In \cite{CPR17}, we suggested a machine learning method to solve the 
+	RTL problem where a robot, called \emph{Tail} at one end of a line formation of 
+	a multi-robot team, is to predict positions of all other teammates only using local
+	observations about a single nearby teammate. Since each robot has a limited sensor
+	radius and a relatively simple motion rule with dependency 
+	on the position of its nearest neighbors, 
+	the \emph{Tail} has to be able to learn the regularity 
+	of the observed motions of neighbor to finally infer the poses of all other robots.
+	We introduced a repetitive prediction scheme to use predictions on 
+	nearer teammates to make predictions on farther ones until the prediction 
+	reached the \emph{Head} robot at the other end in line formation. 	
+	Also, computer simulations showed the feasibility of the method 
+	especially with caging scenario in which the \emph{Tail} could recognize a
+	caging action of \emph{Head} in early stage and promote a proactive maneuver to 
+	better assist in team cooperation. 
 	
 	RTL problem provides some unique characteristics compared to general localization problems. 
-	In RTL, the robot that executes predictions does not try to localize itself but its teammates using 
-	accessible observations. 
-	Moreover, the robot is not allowed to communicate with other members during prediction phase to 
-	consider communication-free scenarios, which differs from works on cooperative localization. 
-	Hence, RTL usually assumes that robots behave with correlations with their neighbors so that 
-	the resulting behaviors contain the state information of their neighbors. 	
+	In RTL, the robot does not execute predictions on its own location but on  
+	its teammates using accessible information.
+	Moreover, the robot is not allowed to communicate with other members during 
+	prediction phase to consider communication-free scenarios, which differs from 
+	cooperative localization problem. 
+	Hence, RTL usually assumes that robots behave with correlations with their neighbors 
+	so that the resulting behaviors contain cues about the state of their neighbors. 	
 	In this sense, state observers in networked robotic system could be a more similar 
-	configuration to RTL, but RTL emphasizes 
-	possible applications to variable sizes of robotic system and also a general framework 
-	that would not impose any constraint on dynamics of the system.
+	configuration to RTL, but RTL more emphasizes 
+	scalable applications to variable sizes of robot team as well as a general framework 
+	that would impose little constraint on dynamics of the system.
 	
 	%
 	\begin{figure}\centering
@@ -152,27 +159,24 @@
 	\end{figure}
 	%
 	
-	In this work, we propose \emph{IPY-Net} to significantly reduce prediction errors solving 
-	the RTL problem, which would allow to gain stable performance even with more robots added. 
-	\emph{IPY-Net} runs a deep neural network as a backbone, 
-	first to consider physical constraints on the sequential change of team formation and, 
-	second to use a probabilistic representation in the form of image for obtained observations and 
-	new predictions. Specifically, every observed or predicted position is 
-	encoded as an image in which the summation of all values must be $1$, which can be
-	viewed as a probability distribution of position of the robot. Hence,
-	\emph{IPY-Net} learns how to synthesize inputs with some uncertainty to produce a probabilistic 
-	prediction outcome in end-to-end fashion. Furthermore, a recurrent layer is deployed in \emph{IPY-Net}, 
-	which enables the model to take into account possible evolution of 
-	team formation based on recent history and reduce the searching space for predicted solution. 
-	With all combined, historical probabilistic (soft) formations are used as input per prediction
-	providing more flexibility to the predictor in selecting salient features and finally leading to 
-	more robust performance even when the input is noisy to some level.
+	Figure~\ref{fig:Concept} illustrates our proposed pipeline in which 
+	a deep neural network is to learn to synthesize the observations on its neighbor 
+	with knowledge about historical positions of all the teammates. 
+	As shown in Fig.~\ref{fig:DL_Pipeline}, a LSTM layer is deployed to encode 
+	the historical sequence input, which could learn probable evolution of the 
+	team shape over time under physical constraints. 
+	The sequence encoding could help filter out impossible solution candidates
+	that the model might produce if it only utilized the recent observations on 
+	the neighbor, as in \cite{CPR17}, 
+
+	Not only a more powerful model but also a more realistic experiment 
+	environment are prepared. Previously, we 
+	conducted all demonstrations on computer simulations, but in this work, 
+	a physical two-wheeled robotic platform, \emph{Thymio} \cite{Shin14}, is mainly 
+	used to set up more realistic environments.
 	
-	We conduct all experiments on a physical robotic platform,
-	\emph{Thymio} \cite{Shin14}, to demonstrate the improvement in more realistic environments in 
-	contrast to the previous work that relied only on computer simulations. 
-	All codes are available online\footnote{http://www.github.com/ctyeong}, and supplementary videos 
-	are submitted as well. 
+%	All codes are available online\footnote{http://www.github.com/ctyeong}, and supplementary videos 
+%	are submitted as well. 
 		
 	This paper is organized as follow. 
 	In Section~\ref{sec:related_work}, we explore related literature and the distinction of our work. 
@@ -211,13 +215,13 @@
 	it has to be able to utilize the observed information to infer a dependent change of 
 	a far robot.  
 	
-	The most motivating work is in \cite{Choi17} is the most similar to 
+	The most motivating work is in \cite{CPR17} is the most similar to 
 	
 	\section{Problem Description} 
 	\label{sec:problem_description}
 	
 	Basically, we follow the problem configurations for remote teammate localization introduced in 
-	\cite{Choi17}. A robot team moves in a line formation in which	each robot has 
+	\cite{CPR17}. A robot team moves in a line formation in which	each robot has 
 	two adjacent neighbors except for the ones at both ends, each of which has only one neighbor. 
 	The robot on one end is the only robot that tries to move to a 
 	predetermined destination independent from its neighbor. The robot is called 
@@ -225,7 +229,7 @@
 	All the robots in-between are \emph{Follower}~$i$ where $i \in \{1, 2, ..., n-1\}$ starting
 	from the robot closest to the \emph{Tail}.
 	
-	All the robots are set to take actions as formulated in \cite{Choi17} leading  
+	All the robots are set to take actions as formulated in \cite{CPR17} leading  
 	the \emph{Follower} robots and the \emph{Tail} to behave based on the 
 	current positions of their close neighbors. As will be explained in 
 	Section~\ref{sec:experiments}, we utilize the computational, sensory capacity of a central 
@@ -248,7 +252,7 @@
 	\section{Method}
 	\label{sec:method}
 	
-	We refer to the inference scheme of our previous work \cite{Choi17} in which 
+	We refer to the inference scheme of our previous work \cite{CPR17} in which 
 	a regressor is trained in a short line of $3$ robots, and when employed for a larger team, 
 	relaying pose estimations are performed along with the chain of $3$-robot modular teams. 
 	
@@ -371,7 +375,7 @@
 		
 		\item \emph{FC}: 
 		Two fully connected layers run in the predictor without considering historical 
-		information, which is based on \cite{Choi17}.  
+		information, which is based on \cite{CPR17}.  
 				
 		\item \emph{LSTM-FC}: 
 		Model combining the historical LSTM and FC layers similar to \emph{IPY-Net} except that 
@@ -459,7 +463,7 @@
 	We have shown \emph{IPY-Net}, a powerful approach to tackle the remote localization problem 
 	where a robot with limited sensors is to predict positions of all others only using 
 	observations about its nearest neighbor. 
-	\emph{IPY-Net} follow the fundamental spirit of \cite{Choi17} to apply a predictor 
+	\emph{IPY-Net} follow the fundamental spirit of \cite{CPR17} to apply a predictor 
 	trained for a small robot team to a chain of them in a larger team, since it 
 	can provide a scalable feature without re-training.   
 	The distinction in \emph{IPY-Net} is , however, to use a sequence of historical knowledge and 
@@ -470,7 +474,7 @@
 	
 	The experiment results were obtained using a realistic robotic platform to prove 
 	that our method outperforms not only the regressor
-	introduced in \cite{Choi17} but also a general state-of-the-art neural network 
+	introduced in \cite{CPR17} but also a general state-of-the-art neural network 
 	model that is able to use historical data. Especially, our model can present 
 	stable performance even when the input contains some errors which have occurred in 
 	previous prediction. 
