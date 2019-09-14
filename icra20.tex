@@ -330,44 +330,11 @@
 	
 	We refer to the inference scheme of our previous work \cite{CPR17} in which 
 	a regressor is trained in a modular subteam of $3$ robots, and when employed 
-	for a larger team, repetitive predictions are performed along with the chain 
-	of $3$-robot modular teams until reaching the \emph{Head}. 
+	for a larger team, repetitive predictions are performed along with the series
+	of $3$-robot modular teams until reaching the prediction step for \emph{Head}. 
 	More specifically, given a robot team of size $n$, the \emph{Tail} robot 
-	is allowed 
-	
-	
-	\emph{IPY-Net} is designed to produce probabilistic prediction outcomes that contain 
-	uncertainty to some level. Specifically, the training process is to encourage to learn 
-	the probability distribution on predicted position or orientation. 
-	Furthermore, during relaying prediction, the model has to be able to understand 
-	the probability distribution predicted at a previous $3$-robot module to 
-	make prediction for the current one.  
-	
-	To be specific, \emph{IPY-Net} adopts a $m \times m$ matrix, which is an image, and 
-	a $1 \times k$ matrix to represent position and orientation, respectively. Because  
-	each matrix is a probability distribution, the summation of all elements must be $1$. 
-	For example, an observed $x$ coordinate is first converted by Equation~\ref{eq:x_conversion}.
-	
-	\begin{equation}
-	\label{eq:x_conversion}
-		x' = \frac{x - x_{min}}{x_{max} - x_{min}} \times m - \frac{m}{2}
-	\end{equation}
-	
-	where $x_{min}$ and $x_{max}$ are the minimum and maximum of $x$ coordinates
-	empirically observed. $y'$ can be calculated from a $y$ coordinate in a similar way. 
-	Then, the position matrix $M_p$ initialized with zeros is updated 
-	
-	\begin{equation}
-		\begin{aligned}
-		M_{p}(\lfloor{x'}\rfloor, \lfloor{y'}\rfloor) \\
-		M_{p}(\lfloor{x'}\rfloor+1, \lfloor{y'}\rfloor) \\
-		M_{p}(\lfloor{x'}\rfloor, \lfloor{y'}\rfloor+1) \\
-		M_{p}(\lfloor{x'}\rfloor+1, \lfloor{y'}\rfloor+1) 
-		\end{aligned}
-	\end{equation} 
-	
-	We use the image representation, since it allows to learn an arbitrary probability distribution 
-	instead of a known distribution constrained on a set of parameters.
+	is allowed to gain the position of \emph{Follower 1}, $\vec{p}_{F}$ every 
+	single time step. Once 
 	
 	
 	\subsection{Neural network}
