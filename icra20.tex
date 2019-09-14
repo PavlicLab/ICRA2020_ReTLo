@@ -144,16 +144,14 @@
 	%
 	\begin{figure}\centering
 		\includegraphics[width=1.\columnwidth]{fig_Concept}
-		\caption{Example of \emph{IPY-Net} performing RTL on $6$-robot team. 
-			While the \emph{Head} (red) is driving 
-			the team in line formation, the \emph{Tail} can observe the motions of 
-			\emph{Follower 1} (purple) within its sensor radius (yellow).
-			The observation, $O$, and the historical positions of all robots, $h$, that
-			the \emph{Tail} has known so far become an input to \emph{IPY-Net} to pro 
-			All positions of robots in the local view of \emph{Tail} are visualized in 
-			image as probabilistic representation. Note here that since \emph{Follower 4} 
-			can be observed directly, the image representation does not illustrate any
-			uncertainty for it. 
+		\caption{Illustration of our proposed pipepline in a snapshot example of 
+			$5$~robots at time $t$.
+			Each robot has a limited view and a motion rule dependent on its neighbors
+			except the \emph{Head} robot leading the team at the front. 
+			\emph{Tail} uses recent observations on its neighbor, \emph{Follower 3}, 
+			which is denoted as $O(t-1,t)$. A sequence of historical poses, $h$, is 
+			also encoded for the model to make a final prediction on the 
+			unseen teammates. 
 		}
 		\label{fig:Concept}
 	\end{figure}
