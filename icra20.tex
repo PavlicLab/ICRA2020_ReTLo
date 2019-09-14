@@ -426,8 +426,9 @@
 	\begin{figure}[t]
 	\centering
 	\includegraphics[width=1.\columnwidth]{fig_macro_eval}
-	\caption{Prediction errors of \emph{IPY-Net} and \emph{I-LSTM-FC} 
-		for different robots at each time step.  
+	\caption{Average error of each model in two different sizes of robot team. 
+		For each of machine learning methods, the mean performance of $5$~separate training 
+		sessions is reported with a error bar to visualize the performance variation. 
 	}
 	\label{fig:macro_eval}
 	\end{figure}
@@ -443,11 +444,29 @@
 	\end{figure}
 
 	
-	\subsection{Overall accuracy}
+	\subsection{Overall performance}
 	\label{sec:overall_performance}
 	
-	We show overall performance of each model in Table~\ref{table:overall_performance}. 
-	The error distance is averaged for all samples of all robots. 
+	First of all, we evaluate each model in a macroscopic view, as shown in 	
+	Fig.~\ref{fig:macro_eval}, where each model is tested with the 
+	test data of $3$-robot team and $5$-robot team separately, and in each case, 
+	the averaged error for all position predictions is reported. 
+	Specifically, in the case of $3$~robots, the average error is calculated only on 
+	the prediction for the \emph{Head} robot, while in the $5$-robot case, 
+	it involves all predictions for \emph{Follower 2}, \emph{Follower 3}, and \emph{Head}.  
+	Moreover, for every model except the \emph{2X Heuristic}, the mean performance of 
+	$5$~separate learning sessions is reported with the standard deviation. 
+	
+	Figure~\ref{fig:macro_eval} displays that the machine learning methods outperform 
+	the \emph{2X Heuristic} in any case. In particular, the performance gap between 
+	\emph{2X Heuristic} and \emph{FC} becomes much larger in $5$-robot case suggesting that
+	during the data collection, we added much randomness to the shape of the robot team.  
+	
+	Also, our model clearly shows the performance improvement over the \emph{FC} model, since 
+	the average error was reduced by $47\%$ and $40\%$ in the $3$-robot and $5$-robot case, 
+	respectively. In addition, considering the diameter of a \emph{Thymio} robot is 
+	$12$~cm, as only three robots are deployed, the average distance between the prediction 
+	and the true position is shorter than the length of the body. 
 
 	
 	\subsection{Microscopic analysis}
