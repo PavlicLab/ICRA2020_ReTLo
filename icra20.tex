@@ -495,13 +495,19 @@
     Especially, for first $4$ seconds, the prediction on \emph{Head} from our model appears 
     more accurate than the prediction on \emph{Follower~2} from the \emph{FC} implying that 
     until then, lower errors is produced on \emph{Follower~3} as well. 
-
 	
 	\subsubsection{Limitation} 
 	\label{sec:limitation}
 	
-	
-	
+	Figure~\ref{fig:micro_eval} shows that using our regressor, we could trust the inference 
+	outcome until before first $3$~seconds and $4.5$~seconds depending on which robot to target between 
+	\emph{Follower~2} and \emph{Head}, since the body of a \emph{Thymio} robot is around 
+	$12$~cm. This actually relies on the acceptable degree of error and the diameter of 
+	robotic platform used in the problem to tackle. Still, our result demonstrates the potential 
+	of effectively alleviating prediction error by adopting a well-designed model, and also, 
+	the relatively short time period of guaranteed localization may be sufficient to 
+	save on the communication bandwidth within the robot team. 
+		
 	
 	\begin{figure*}[t]
 		\centering
