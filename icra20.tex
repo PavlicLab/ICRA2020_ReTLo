@@ -426,7 +426,7 @@
 	\begin{figure}[t]
 	\centering
 	\includegraphics[width=1.\columnwidth]{fig_macro_eval}
-	\caption{Average error of each model in two different sizes of robot team. 
+	\caption{Average accumulated error of each model in two different sizes of robot team. 
 		For each of machine learning methods, the mean performance of $5$~separate training 
 		sessions is reported with a error bar to visualize the performance variation. 
 	}
@@ -437,8 +437,10 @@
 	\begin{figure}[t]
 		\centering
 		\includegraphics[width=1.\columnwidth]{fig_micro_eval}
-		\caption{Prediction errors of \emph{IPY-Net} and \emph{I-LSTM-FC} 
-			for different robots at each time step.  
+		\caption{Average step-wise error for different target robots in $5$-robot team. 
+			For each model, all the prediction errors at different time steps are averaged 
+			for a specific robot. The error bars represent the standard deviation of 
+			$5$~separate models in terms of the performance metric. 
 		}
 		\label{fig:micro_eval}
 	\end{figure}
@@ -472,12 +474,30 @@
 	\subsection{Microscopic analysis}
 	\label{sec:microscopic_analysis}
 	
-	Here, we further analyze the behaviors of top two models in overall performance 
-	by focusing more on errors for different robots at each time step. 
-	The robot-wise error is averaged at each step across instances. 
-	The result could help compare the upper bounds of errors of the models and 
-	understand the feasibility of them during the instance interval. 
+	In this section, we analyze the performance of the machine learning based models 
+	in more fine-grained perspective. For each model, Fig.~\ref{fig:micro_eval} visualizes the 
+	step-wise error for different target robots (\emph{Follower 2} and \emph{Head}) 
+	in $5$-robot case, which is calculated by averaging the errors of each step across instances. 
+	Such a way of evaluation can offer us a crucial insight to understand an approximate time frame 
+	within which a level of average error could be ensured for a specific robot. During this 
+	evaluation, we also had $5$~separate training sessions to gain the mean and the variability 
+	of the performance. 
+	
+	Figure~\ref{fig:micro_eval} shows that for any target robot, the error increases over time due to the 
+	design of the repetitive prediction method where previous errors would negatively 
+	impact the prediction power for the following steps. In a similar sense, each model 
+	brings about larger error on the \emph{Head} prediction than on the \emph{Follower 2}. 
+	
+	At every time step, our approach causes less error than the \emph{FC} model for any robot, and  
+    the visualized error bars confirm that the performance gap is significant in any case.  
+    Especially, for first $4$ seconds, the prediction on \emph{Head} from our model appears 
+    more accurate than the prediction on \emph{Follower~2} from the \emph{FC} implying that 
+    until then, lower errors is produced on \emph{Follower~3} as well. 
 
+	
+	\subsubsection{Limitation} 
+	\label{sec:limitation}
+	
 	
 	\begin{figure*}[t]
 		\centering
