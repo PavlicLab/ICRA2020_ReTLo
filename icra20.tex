@@ -372,40 +372,44 @@
 	\section{Method}
 	\label{sec:method}
 
-%	In this section, we introduce more details about our method.
-	First, we briefly revisit the scalable prediction approach, shown in~\cite{CPR17},
-	to train the model on a small team and to be able to produce predictions
-	even on a larger team without additional training.
-	Then, we present the regressor built for learning not only with observations on
-	the neighbor but also with a sequence of past team formations.
+    Here, we first briefly review our scalable 3-to-many prediction
+    approach for training with a small team and implementation on a
+    larger team without additional training~\cite{CPR17}. Then in
+    Section~\ref{sec:regression_model}, we present our improved
+    regression approach that uses not only current nearest-neighbor
+    observations but also sequences of past team formations.
 
-	\subsection{Scalable prediction}
+	\subsection{Scalable prediction approach}
 	\label{sec:scalable_prediction}
 
-	The basic idea in~\cite{CPR17} is that the \emph{Tail} uses all the available information
-	such as the observation on its neighbor
-	at $t$ and $t+1$ to predict $\vec{p}_{H@t}$ of \emph{Head} in its subteam of $3$~robots,
-	which is actually \emph{Follower~2} in the entire team.
-	After twice applications of such a prediction until $t+2$, the prediction outputs,
-	$\vec{p}_{H@t}$ and $\vec{p}_{H@t+1}$, enable
-	to perform the same process in the subteam of the next $3$~robots, which are
-	\emph{Follower~1, Follower~2}, and \emph{Follower~3}, as if \emph{Follower~1} and
-	\emph{Follower~3} were \emph{Tail} and \emph{Head} in that subteam, respectively.
+    The scalable RTL implementation we previously
+    introduced~\cite{CPR17} iteratively applies predictions of farther
+    and farther robots within focal 3-robot teams, starting with the
+    nearest \emph{Follower} robots and eventually leading to prediction
+    of the \emph{Head}. In particular, \emph{Tail} initially uses all
+    available information about \emph{Follower}~1 at time $\tau$ and
+    $\tau+1$ to predict $\vec{p}_{F_2@\tau}$ of \emph{Follower}~2. Then,
+    at $\tau+2$, \emph{Tail} may repeat this approach centered on
+    \emph{Follower}~2 to predict $\vec{p}_{F_3@\tau}$ of
+    \emph{Follower~3}. Thus, after $n-1$ iterations of this approach,
+    the \emph{Tail} will eventually have an estimate of the position
+    $\vec{p}_{H@\tau}$ of \emph{Head} at time $\tau$.
 
-	Since the inference is applied in each of subteam in a repetitive manner,
-	a predictor can be trained simply with a $3$-robot team and still be used for a larger
-	size of team without additional training for it. However, the extension of
-	modular prediction brings about a time delay in making a prediction for a far robot.
-	Specifically, a prediction for \emph{Head} in a subteam requires a series of at least
-	$2$~observations on \emph{Follower}, and in other words,
-	the initial position of robot~$i$ can be estimated at time $i$ for the first time
-	where robot~$i$ refers to the robot that is $i$ robots ahead of \emph{Tail}.
+    Because each inference is only applied in 3-robot teams (i.e.,
+    the \emph{Tail}, a focal \emph{Follower}, and the robot
+    immediately ahead of that \emph{Follower}), the predictor can be
+    trained simply with a $3$-robot team and used for a larger size time
+    without additional training for the larger-team case.
+    However, this iterative modular-prediction approach brings about a
+    time delay in making a prediction for a far robot. Furthermore, any
+    estimation errors tend to accumulate, making the use of this
+    approach limited either to short chains of robots or short
+    estimation time periods. Thus, in the next section, we describe a
+    regressor significantly improved over our previous
+    version~\cite{CPR17} that increases the feasibility of using this
+    approach in realistic multi-robot teaming scenarios.
 
-	In the next section, we discuss how to incorporate such a prediction strategy with
-	the proposed model regressor in more technical details.
-
-
-	\subsection{Regression model}
+	\subsection{Improved regression model}
 	\label{sec:regression_model}
 
 	Because the learned regressor is designed to work in a modular team of $3$ robots,
