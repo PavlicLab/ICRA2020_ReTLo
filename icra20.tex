@@ -316,59 +316,58 @@
 	\section{RTL Problem \& System Design}
 	\label{sec:rtl_problem}
 
-	In our previous work~\cite{CPR17}, we introduced a design of robotic system and the RTL
-	problem to solve on it.
-	For this work, we build the robot team based on the previous design, where
-	the robot team is implemented to move in a line formation
-	in which each robot has two adjacent neighbors except for the ones at the ends,
-	each of which has only one neighbor.
-	The robot on one end is called \emph{Head}, which is the only robot that
-	drives the team toward a destination predetermined in an independent manner.
-	The robot on the opposite end is named \emph{Tail}, and all other robots
-	in-between are \emph{Follower}~$i$ where $i \in \{1, 2, ..., n-2\}$ starting
-	from the robot closest to the \emph{Tail}.
+    Here, we build on the problem and approach we introduced in our previous
+    work~\cite{CPR17}. In particular, we consider a team of $n \in
+    \{3,4,\dots\}$ robots designed to move in a line formation.
+    Each robot maintains a programmed
+    proximity with both the robot ahead of it and behind it, except for
+    the \emph{Head} robot that leads the convoy and the \emph{Tail}
+    that only follows its single neighbor ahead of it. Each robot in
+    between \emph{Head} and \emph{Tail} are referred to as
+    \emph{Follower}~$i$, where $i \in \{1, 2, \dots, n-2\}$ represents
+    the position relative to the \emph{Tail} (i.e., \emph{Follower}~1 is
+    closest to the \emph{Tail}).
 %	For better readability, we
 %	interchangeably denote the robots as \emph{H, T} and $F_{i}$.
 
-	Every robot has the same capability of sensor and motion under the same
-	kinematic constraints, although they may take different actions according to
-	motion rules depending on their roles, as formulated in~\cite{CPR17}. This catalyzes the
-	 \emph{Follower} robots and the \emph{Tail} to behave based on the current positions of their close neighbors. For simplicity, we assume that every robot
-	 has an ability to accelerate fast enough to always keep the neighbors within their
-	 sensory range.
+    Every robot has the same sensory and motion capabilities and
+    constraints, although they may take different actions according to
+    motion rules depending on their roles. This leads to the
+    \emph{Follower} and \emph{Tail} robots to behave differently based
+    on the current positions of their close neighbors. For simplicity,
+    we assume that every robot has an ability to accelerate fast enough
+    to always keep the neighbors within their sensory range.
 
-	The RTL is to localize all the teammates from the view of
-	\emph{Tail} only using locally visible information, which is the position of
-	\emph{Follower}~$1$ at every time step.
-	We assume that until a specific time instant
-	$\tau$, all the information about positions and orientations of all robots
-	have been shared especially with the \emph{Tail} robot,
-	possibly via global communication,
-	but from $\tau+1$, such data becomes no longer available causing a need of the
-	localization technique only utilizing local observations.
+    The RTL is to localize all teammates from the view of \emph{Tail}
+    only using locally observable information of the position position
+    of \emph{Follower}~$1$ at every time step. We assume that until a
+    specific time instant $\tau$, all the information about positions
+    and orientations of all robots have been shared reliably with the
+    \emph{Tail} robot, possibly via global communication, but continued
+    information sharing is unavailable after time $\tau$ thus requiring
+    \emph{Tail} to use this localization technique to extrapolate from
+    the previously known reliable positions.
 
-	More formally, at the time instant $\tau$, the following set of poses of all teammates is
-	available:
-
-	\begin{equation*}
+    Formally, at the time instant $\tau$, the following set of poses of
+    all teammates is available:
+    %
+	\begin{equation}
 		\{\vec{p}_{r@t},\theta_{r@t}\} \\
-	\label{eq:pose_set}
-	\end{equation*}
-
-	where $\vec{p}_{r@t} \overset{\Delta}{=}(x_{r@t}, y_{r@t})$ is the position of robot~$r$
-	at time $t$
-	where  $r \in \{T, F_{1}, F_{2}, ..., F_{n-2}, H\}$ and $t \leq \tau$.
-
-	Also, at each time $t > \tau$, the position of $F_1$, $\vec{p}_{F_{1@t}}$ is observed.
-	That is, the RTL problem is to use all the available information to predict
-	the pose set above at $t' > \tau$.
+	    \label{eq:pose_set}
+	\end{equation}
+    %
+    where $\vec{p}_{r@t} \overset{\Delta}{=}(x_{r@t}, y_{r@t})$ is the
+    position of robot~$r$ at time $t$ where  $r \in \{T, F_{1}, F_{2},
+    ..., F_{n-2}, H\}$ and $t \leq \tau$. The RTL problem is thus, at
+    each time $t > \tau$, to observe the position of $F_1$,
+    $\vec{p}_{F_{1@t}}$, and use all available information to predict
+    the pose set in Eq.~\eqref{eq:pose_set} for time $t' > \tau$.
 
 %	This may simulate some realistic scenarios where
 %	an unexpected technical issue occurs at a time point disabling any robot-to-robot
 %	data transfer, or the robot team intentionally stops the information
 %	sharing when entering some specific regions either for security or for saving on the
 %	communication cost.
-
 
 	\section{Method}
 	\label{sec:method}
@@ -379,7 +378,6 @@
 	even on a larger team without additional training.
 	Then, we present the regressor built for learning not only with observations on
 	the neighbor but also with a sequence of past team formations.
-
 
 	\subsection{Scalable prediction}
 	\label{sec:scalable_prediction}
@@ -475,7 +473,7 @@
 	$Y_{p} = \hat{\vec{p}}_{H@t}$ and
 	$Y_{\theta} = (\hat{\theta}_{F@t}, \hat{\theta}_{H@t}, \hat{\theta}_{F@t+1})$.
 
-	For fusion of $o$ and $h$ features, layer $\phi$ in Equation~\ref{eq:regression_output}
+    For fusion of $o$ and $h$ features, layer $\phi$ in Eq.~\eqref{eq:regression_output}
 	could be implemented by any type of layer. During our experiments, we
 	built a FC layer of size $d$ to find a nonlinear relationship between the input
 	features and achieved a satisfactory performance.
