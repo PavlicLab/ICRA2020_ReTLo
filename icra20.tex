@@ -361,7 +361,7 @@
     ..., F_{n-2}, H\}$ and $t \leq \tau$. The RTL problem is thus, at
     each time $t > \tau$, to observe the position of $F_1$,
     $\vec{p}_{F_{1@t}}$, and use all available information to predict
-    the pose set in Eq.~\eqref{eq:pose_set} for time $t' > \tau$.
+    the pose set in Eq.~\eqref{eq:pose_set} for time $t' > t > \tau$.
 
 %	This may simulate some realistic scenarios where
 %	an unexpected technical issue occurs at a time point disabling any robot-to-robot
@@ -387,13 +387,13 @@
     and farther robots within focal 3-robot teams, starting with the
     nearest \emph{Follower} robots and eventually leading to prediction
     of the \emph{Head}. In particular, \emph{Tail} initially uses all
-    available information about \emph{Follower}~1 at time $\tau$ and
-    $\tau+1$ to predict $\vec{p}_{F_2@\tau}$ of \emph{Follower}~2. Then,
-    at $\tau+2$, \emph{Tail} may repeat this approach centered on
-    \emph{Follower}~2 to predict $\vec{p}_{F_3@\tau}$ of
+    available information about \emph{Follower}~1 at time $t > \tau$ and
+    $t+1$ to predict $\vec{p}_{F_2@t}$ of \emph{Follower}~2. Then,
+    at $t+2$, \emph{Tail} may repeat this approach centered on
+    \emph{Follower}~2 to predict $\vec{p}_{F_3@t}$ of
     \emph{Follower~3}. Thus, after $n-1$ iterations of this approach,
     the \emph{Tail} will eventually have an estimate of the position
-    $\vec{p}_{H@\tau}$ of \emph{Head} at time $\tau$.
+    $\vec{p}_{H@t}$ of \emph{Head} at time $t$.
 
     Because each inference is only applied in 3-robot teams (i.e.,
     the \emph{Tail}, a focal \emph{Follower}, and the robot
@@ -412,86 +412,88 @@
 	\subsection{Improved regression model}
 	\label{sec:regression_model}
 
-	Because the learned regressor is designed to work in a modular team of $3$ robots,
-	all the notations here for \emph{Head, Follower}, and \emph{Tail} only indicate
-	them. In addition, all positions noted here are assumed to be relative positions
-	to the \emph{Tail} robot, since in practice, the \emph{Tail} has to understand
-	positions of others by projection onto the local coordinate system centered
-	at itself. Though a similar conversion may be considered for orientation,
-	we use absolute direction in this work because assuming robots equipped
-	with an instrument such as a electric compass is acceptable.
+    Because the learned regressor is designed to work in a modular team
+    of $3$ robots, notations for robot~$r \in \{H, F, T\}$ only indicate
+    the identities of \emph{Head}, \emph{Follower}, and \emph{Tail} and
+    not any additional intermediate \emph{Follower} robots. In addition,
+    all positions noted here are assumed to be in expressed in the
+    reference frame of the \emph{Tail} robot because, in practice, the
+    \emph{Tail} has to understand positions of others by projection onto
+    the local coordinate system centered at itself. Though a similar
+    conversion may be considered for orientation, we use absolute
+    direction in this work (i.e., assume that all robots agree on
+    compass directions) for simplicity.
 
 	Previously, in~\cite{CPR17} we used a series of fully-connected~(FC) layers
 	to only take the observation input and estimate the position and orientation
 	of interest:
-
+    %
 	\begin{equation}
-	Y = f(X_{obs})
+	    Y = f(X_{obs})
 	\end{equation}
-
-	\begin{flushleft}
-	where $f$ is a series of \emph{FC} layers,
-	$X_{obs} = (\vec{p}_{F@t}, \theta_{F@t}, \vec{p}_{F@t+1})$, and
-	$Y = (\hat{\vec{p}}_{H@t}, \hat{\theta}_{F@t+1})$
-	\end{flushleft}
+    %
+    where $f$ is a series of \emph{FC} layers, $X_{obs} =
+    (\vec{p}_{F@t}, \theta_{F@t}, \vec{p}_{F@t+1})$, and $Y =
+    (\hat{\vec{p}}_{H@t}, \hat{\theta}_{F@t+1})$
 
 	As shown in Fig.~\ref{fig:DL_Pipeline}, however, our proposed model uses not only
 	an observation input but also a historical sequence of poses. First of all, we
 	use a slightly different observation encoding:
-
+    %
 	\begin{equation}
-	o = f_{obs}(X_{obs})
+	    o = f_{obs}(X_{obs})
 	\end{equation}
-
+    %
 	where $f_{obs}$ is a FC layer,
-		$X_{obs} = (\vec{p}_{F@t}, \vec{p}_{F@t+1})$,
-		and $o \in \mathbb{R}^{k}$ is the encoded observation feature
-		where $k$ is the size of FC layer.
+	$X_{obs} = (\vec{p}_{F@t}, \vec{p}_{F@t+1})$,
+	and $o \in \mathbb{R}^{k}$ is the encoded observation feature
+	where $k$ is the size of FC layer.
 
-	A historical sequence of poses is encoded by a bi-directional LSTM layer~\cite{Wu16}:
-
+    A historical sequence of poses is encoded by a bi-directional LSTM
+    layer~\cite{Wu16}:
+    %
 	\begin{equation}
-	h = f_{hist}(X_{hist})
+	    h = f_{hist}(X_{hist})
 	\end{equation}
-
-
-     where $f_{hist}$ is a LSTM layer,
-		$X_{hist} = (\vec{p}_{H@t-l+1:t}, \theta_{H@t-l+1:t},
-		             \vec{p}_{F@t-l+1:t}, \theta_{F@t-l+1:t})$,
-		and $h \in \mathbb{R}^{2 \times m}$ is the encoded history feature
+    %
+    where $f_{hist}$ is a LSTM layer,
+	$X_{hist} = (\vec{p}_{H@t-l+1:t}, \theta_{H@t-l+1:t},
+	\vec{p}_{F@t-l+1:t}, \theta_{F@t-l+1:t})$,
+	and $h \in \mathbb{R}^{2 \times m}$ is the encoded history feature
 	where $l$ is the length of historical sequence,
 	and $m$ is the size of LSTM layer.
 
 	Then, $o$ and $h$ are synthesized by a layer $\phi$, which is
 	passed as input to two separate final regressors, $g_{p}$ and $g_\theta$.
-
+    %
 	\begin{equation}
-	\begin{split}
-	Y_{p} = g_{p}(\phi(o, h)),\\
-	Y_{\theta}= g_{\theta}(\phi(o, h))
-	\end{split}
-	\label{eq:regression_output}
+        \begin{split}
+        Y_{p} = g_{p}(\phi(o, h)),\\
+        Y_{\theta}= g_{\theta}(\phi(o, h))
+        \end{split}
+        \label{eq:regression_output}
 	\end{equation}
-
+    %
 	where
 	$Y_{p} = \hat{\vec{p}}_{H@t}$ and
 	$Y_{\theta} = (\hat{\theta}_{F@t}, \hat{\theta}_{H@t}, \hat{\theta}_{F@t+1})$.
 
-    For fusion of $o$ and $h$ features, layer $\phi$ in Eq.~\eqref{eq:regression_output}
-	could be implemented by any type of layer. During our experiments, we
-	built a FC layer of size $d$ to find a nonlinear relationship between the input
-	features and achieved a satisfactory performance.
+    For fusion of $o$ and $h$ features, layer $\phi$ in
+    Eq.~\eqref{eq:regression_output} could be implemented by any type of
+    layer. During our experiments, we built a FC layer of size $d$ to
+    find a nonlinear relationship between the input features and
+    achieved a satisfactory performance.
 
-	Furthermore, $\hat{\theta}_{F@t+1}$ gained with $\hat{\theta}_{F@t}$ is
-	estimated again when $\hat{\theta}_{F@t+2}$ is estimated at the next
-	prediction step. Although our model keeps the later estimate only,
-	we discovered that involving it in both steps can regulate the regressor
-	during learning to produce a model that achieves a better score in validation.
+    Furthermore, $\hat{\theta}_{F@t+1}$ gained with $\hat{\theta}_{F@t}$
+    is estimated again when $\hat{\theta}_{F@t+2}$ is estimated at the
+    next prediction step. Although our model keeps the later estimate
+    only, we discovered that involving it in both steps can regulate the
+    regressor during learning to produce a model that achieves a better
+    score in validation.
 
-	To find a best combination of model parameters mentioned above, we performed
-	an extensive random search with choices of other learning parameters and
-	finally set $k=80, m=160$, and $d=160$.
-
+    To find a best combination of model parameters mentioned above, we
+    performed an extensive random search with choices of other learning
+    parameters and finally set $k=80, m=160$, and $d=160$.
 
 	\section{Experiments}
 	\label{sec:experiments}
@@ -511,60 +513,69 @@
 		\end{table}
 	}
 
-	To demonstrate the effectiveness of our method, we employ a physical robotic platform,
-	\emph{Thymio}~\cite{Shin14}, which allows to execute a team of small two-wheeled
-	mobile robots. We use a central computer connected with a overhead camera to simulate
-	better proximity
-	sensors, a more powerful computing power, and a GPS system that would easily run on each robot in
-	real scenario.
-	Specifically, the central system is set up to detect the locations of robots in real
-	time using off-the-shelf computer vision packages
-	and communicate with a \emph{Raspberry Pi} board~\cite{Upton14} on each robot to send
-	the next command relying on its neighbors.
-	The command was essentially obtained based on the formulation in~\cite{CPR17}, but
-    as the robot was asked to move backward, we just set it not to move for its
-	neighbor behind to catch it up, which helped gain smoother trajectories of the team
-	and eventually avoid possible collisions between robots.
+    To demonstrate the effectiveness of our method, we employ a physical
+    robotic platform, \emph{Thymio}~\cite{Shin14}, which allows to
+    execute a team of small two-wheeled mobile robots. We use a central
+    computer connected with a overhead camera to simulate better
+    proximity sensors, a more powerful computing power, and a GPS system
+    that would easily run on each robot in real scenario. Specifically,
+    the central system is set up to detect the locations of robots in
+    real time using off-the-shelf computer vision packages and
+    communicate with a \emph{Raspberry Pi} board~\cite{Upton14} on each
+    robot to send the next command relying on its neighbors. The command
+    was essentially obtained based on the formulation in~\cite{CPR17},
+    but as the robot was asked to move backward, we just set it not to
+    move for its neighbor behind to catch it up, which helped gain
+    smoother trajectories of the team and eventually avoid possible
+    collisions between robots.
 
-	Although the experiment setting involves
-	some external computations and sensors due to limited capability of \emph{Thymio},
-	most of realistic assumptions still hold from the physical constraints and disturbance
-	during execution. For better understanding of readers on the prepared environment,
-	we submit a supplementary video.
+    Although the experiment setting involves some external computations
+    and sensors due to limited capability of \emph{Thymio}, most of
+    realistic assumptions still hold from the physical constraints and
+    disturbance during execution. For better understanding of readers on
+    the prepared environment, we submit a supplementary video.
 
-	Finally, we collected the pose data from two robot teams, one of $3$~robots and one
-	of $5$~robots, that ran separately in an arena of $2.5 m \times 1.9 m$.
-	The location detection was performed at $4$ frames per second at each of
-	which a new command was received by each robot. Also, all pose data was
-	collected at the rate of $2$ frames per second,
-	which was not necessarily synchronized with the command timing.
-	We set the length of history to $5$~seconds~($10$~time steps in data recording) and
-	the time window for prediction to the next $8$~seconds~($16$~time steps).
-	Table~\ref{table:data_description} provides details about the collected data
-	where a sample refers to a set of coordinates and orientations in a subteam
-	with which a prediction can be performed, and an instance is set of all available samples for $13$ seconds from the entire team. We clustered recordings so that
-	an instance has at least $7$-second time gap to another ensuring
-	the motions between separate instances have little dependency.
+    Finally, we collected the pose data from two robot teams, one of
+    $3$~robots and one of $5$~robots, that ran separately in an arena of
+    $2.5 m \times 1.9 m$. The location detection was performed at $4$
+    frames per second at each of which a new command was received by
+    each robot. Also, all pose data was collected at the rate of $2$
+    frames per second, which was not necessarily synchronized with the
+    command timing. We set the length of history to
+    $5$~seconds~($10$~time steps in data recording) and the time window
+    for prediction to the next $8$~seconds~($16$~time steps).
+    Table~\ref{table:data_description} provides details about the
+    collected data where a sample refers to a set of coordinates and
+    orientations in a subteam with which a prediction can be performed,
+    and an instance is set of all available samples for $13$ seconds
+    from the entire team. We clustered recordings so that an instance
+    has at least $7$-second time gap to another ensuring the motions
+    between separate instances have little dependency.
 
-	$60$\% data from the $3$-robot team is used to train our model, and another $10\%$
-	was set aside for validation. At each epoch of training, a validation followed so that
-	the learned weights that achieved the best validation performance were saved.
-	The rest of $20\%$ data and all the data from $5$-robot were used to test the model.
+    $60$\% data from the $3$-robot team is used to train our model, and
+    another $10\%$ was set aside for validation. At each epoch of
+    training, a validation followed so that the learned weights that
+    achieved the best validation performance were saved. The rest of
+    $20\%$ data and all the data from $5$-robot were used to test the
+    model.
 
-	Our model is implemented in \emph{Tensorflow} \emph{Python} library \footnote{https://www.tensorflow.org/}
-	to realize the entire pipeline, and it was trained to minimize
-	loss functions such as Euclidean distance and mean absolute errors
-	for position and orientation estimation, respectively.
+    Our model is implemented in \emph{Tensorflow} \emph{Python}
+    library~\footnote{https://www.tensorflow.org/} to realize the entire
+    pipeline, and it was trained to minimize loss functions such as
+    Euclidean distance and mean absolute errors for position and
+    orientation estimation, respectively.
 
 	We compare our proposed model to two different approaches such as:
+    %
 	\begin{itemize}
 		\item \emph{$2$X Heuristic}:
-		The prediction on \emph{Head} within a modular subteam is performed by doubling the vector
-		$\vec{p}_{F} - \vec{p}_{T}$.
+            The prediction on \emph{Head} within a modular subteam is
+            performed by doubling the vector $\vec{p}_{F} -
+            \vec{p}_{T}$.
 
 		\item \emph{FC}:
-		Two fully connected layers run in the predictor without historical
-		information, which is based on~\cite{CPR17}.
+            Two fully connected layers run in the predictor without
+            historical information, which is based on~\cite{CPR17}.
 
 	\end{itemize}
 
@@ -575,17 +586,62 @@
 %	\subsection{Results}
 %	\label{sec:results}
 
+	\subsection{Overall performance}
+	\label{sec:overall_performance}
+
+    First of all, we evaluate each model in a macroscopic view, as shown
+    in Fig.~\ref{fig:macro_eval}, where each model is tested with the
+    test data of $3$-robot team and $5$-robot team separately, and in
+    each case, the averaged error for all position predictions is
+    reported. Specifically, in the case of $3$~robots, the average error
+    is calculated only on the prediction for the \emph{Head} robot,
+    while in the $5$-robot case, it involves all predictions for
+    \emph{Follower 2}, \emph{Follower 3}, and \emph{Head}. Moreover, for
+    every model except the \emph{2X Heuristic}, the mean performance of
+    $5$~separate learning sessions is reported with the standard
+    deviation.
+    %
 	\begin{figure}[t]
-	\centering
-	\includegraphics[width=1.\columnwidth]{fig_macro_eval}
-	\caption{Average accumulated error of each model in two different sizes of robot team.
-		For each of machine learning methods, the mean performance of $5$~separate training
-		sessions is reported with a error bar to visualize the performance variation.
-	}
-	\label{fig:macro_eval}
+        \centering
+        \includegraphics[width=1.\columnwidth]{fig_macro_eval}
+        \caption{Average accumulated error of each model in two different sizes of robot team.
+            For each of machine learning methods, the mean performance of $5$~separate training
+            sessions is reported with a error bar to visualize the performance variation.
+        }
+        \label{fig:macro_eval}
 	\end{figure}
 
+    Figure~\ref{fig:macro_eval} displays that the machine learning
+    methods outperform the \emph{2X Heuristic} in any case. In
+    particular, the performance gap between \emph{2X Heuristic} and
+    \emph{FC} becomes much larger in $5$-robot case suggesting that
+    during the data collection, we added much randomness to the shape of
+    the robot team.
 
+    Also, our model clearly shows the performance improvement over the
+    \emph{FC} model, since the average error was reduced by $47\%$ and
+    $40\%$ in the $3$-robot and $5$-robot case, respectively. In
+    addition, considering the diameter of a \emph{Thymio} robot is
+    $12$~cm, as only three robots are deployed, the average distance
+    between the prediction and the true position is shorter than the
+    length of the body. This overall result proves the effectiveness of
+    encoding a sequence of historical behaviors as a feature input over
+    the model fed only with very recent observation.
+
+	\subsection{Microscopic analysis}
+	\label{sec:microscopic_analysis}
+
+    In this section, we analyze the performance of the machine learning
+    based models in more fine-grained perspective. For each model,
+    Fig.~\ref{fig:micro_eval} visualizes the step-wise error for
+    different target robots~(\emph{Follower 2} and \emph{Head}) in
+    $5$-robot case, which is calculated by averaging the errors of each
+    step across instances. Such a way of evaluation can offer us a
+    crucial insight to understand an approximate time frame within which
+    a level of average error could be ensured for a specific robot.
+    During this evaluation, we also had $5$~separate training sessions
+    to gain the mean and the variability of the performance.
+    %
 	\begin{figure}[t]
 		\centering
 		\includegraphics[width=1.\columnwidth]{fig_micro_eval}
@@ -599,76 +655,52 @@
 		\label{fig:micro_eval}
 	\end{figure}
 
+    Figure~\ref{fig:micro_eval} shows that for any target robot, the
+    error increases over time due to the design of the repetitive
+    prediction method where previous errors would negatively impact the
+    prediction power for the following steps. In a similar sense, each
+    model brings about larger error on the \emph{Head} prediction than
+    on the \emph{Follower 2}.
 
-	\subsection{Overall performance}
-	\label{sec:overall_performance}
-
-	First of all, we evaluate each model in a macroscopic view, as shown in
-	Fig.~\ref{fig:macro_eval}, where each model is tested with the
-	test data of $3$-robot team and $5$-robot team separately, and in each case,
-	the averaged error for all position predictions is reported.
-	Specifically, in the case of $3$~robots, the average error is calculated only on
-	the prediction for the \emph{Head} robot, while in the $5$-robot case,
-	it involves all predictions for \emph{Follower 2}, \emph{Follower 3}, and \emph{Head}.
-	Moreover, for every model except the \emph{2X Heuristic}, the mean performance of
-	$5$~separate learning sessions is reported with the standard deviation.
-
-	Figure~\ref{fig:macro_eval} displays that the machine learning methods outperform
-	the \emph{2X Heuristic} in any case. In particular, the performance gap between
-	\emph{2X Heuristic} and \emph{FC} becomes much larger in $5$-robot case suggesting that
-	during the data collection, we added much randomness to the shape of the robot team.
-
-	Also, our model clearly shows the performance improvement over the \emph{FC} model, since
-	the average error was reduced by $47\%$ and $40\%$ in the $3$-robot and $5$-robot case,
-	respectively. In addition, considering the diameter of a \emph{Thymio} robot is
-	$12$~cm, as only three robots are deployed, the average distance between the prediction
-	and the true position is shorter than the length of the body. This overall result proves
-	the effectiveness of encoding a sequence of historical behaviors as a feature input
-	over the model fed only with very recent observation.
-
-
-	\subsection{Microscopic analysis}
-	\label{sec:microscopic_analysis}
-
-	In this section, we analyze the performance of the machine learning based models
-	in more fine-grained perspective. For each model, Fig.~\ref{fig:micro_eval} visualizes the
-	step-wise error for different target robots~(\emph{Follower 2} and \emph{Head})
-	in $5$-robot case, which is calculated by averaging the errors of each step across instances.
-	Such a way of evaluation can offer us a crucial insight to understand an approximate time frame
-	within which a level of average error could be ensured for a specific robot. During this
-	evaluation, we also had $5$~separate training sessions to gain the mean and the variability
-	of the performance.
-
-	Figure~\ref{fig:micro_eval} shows that for any target robot, the error increases over time due to the
-	design of the repetitive prediction method where previous errors would negatively
-	impact the prediction power for the following steps. In a similar sense, each model
-	brings about larger error on the \emph{Head} prediction than on the \emph{Follower 2}.
-
-	At every time step, our approach causes less error than the \emph{FC} model for any robot, and
-    the visualized error bars confirm that the performance gap is significant in any case.
-    Especially, for first $4$ seconds, the prediction on \emph{Head} from our model appears
-    more accurate than the prediction on \emph{Follower~2} from the \emph{FC} implying that
-    until then, lower errors is produced on \emph{Follower~3} as well.
+    At every time step, our approach causes less error than the
+    \emph{FC} model for any robot, and the visualized error bars confirm
+    that the performance gap is significant in any case. Especially, for
+    first $4$ seconds, the prediction on \emph{Head} from our model
+    appears more accurate than the prediction on \emph{Follower~2} from
+    the \emph{FC} implying that until then, lower errors is produced on
+    \emph{Follower~3} as well.
 
     \subsubsection{Limitation}
 	\label{sec:limitation}
 
-	Figure~\ref{fig:micro_eval} shows that using our regressor, we could trust the inference
-	outcome until before first $3$~seconds and $4.5$~seconds depending on which robot to target between
-	\emph{Head} and \emph{Follower~2}, since the body of a \emph{Thymio} robot is around
-	$12$~cm. This actually relies on the acceptable degree of error and the diameter of
-	robotic platform used in the problem to tackle. Still, our result demonstrates the potential
-	of effectively alleviating prediction error by adopting a well-designed model, and also,
-	the relatively short time period of guaranteed localization may be sufficient to
-	save on the communication bandwidth within the robot team.
+    Figure~\ref{fig:micro_eval} shows that using our regressor, we could
+    trust the inference outcome until before first $3$~seconds and
+    $4.5$~seconds depending on which robot to target between \emph{Head}
+    and \emph{Follower~2}, since the body of a \emph{Thymio} robot is
+    around $12$~cm. This actually relies on the acceptable degree of
+    error and the diameter of robotic platform used in the problem to
+    tackle. Still, our result demonstrates the potential of effectively
+    alleviating prediction error by adopting a well-designed model, and
+    also, the relatively short time period of guaranteed localization
+    may be sufficient to save on the communication bandwidth within the
+    robot team.
 
-	Also, the error distance when our model performs for \emph{Head} increases relatively slow
-	initially but after some point, the increase rate gradually becomes higher. This is contrast to the
-	case of \emph{FC}, which leads to a constant increase at each time step.
-	This may be because as the historical features are extracted more from previous predictions
-	instead of the truths, it could cause a more accumulated error in prediction outcome than
-	using previous predictions only as observation input as in \emph{FC}.
+    Also, the error distance when our model performs for \emph{Head}
+    increases relatively slow initially but after some point, the
+    increase rate gradually becomes higher. This is contrast to the case
+    of \emph{FC}, which leads to a constant increase at each time step.
+    This may be because as the historical features are extracted more
+    from previous predictions instead of the truths, it could cause a
+    more accumulated error in prediction outcome than using previous
+    predictions only as observation input as in \emph{FC}.
 
+	\subsection{Qualitative results}
+	\label{sec:qualitative_results}
+
+    Figure~\ref{fig:preds} displays three different instances of
+    $5$-robot team in which both the true positions of all robots and
+    the predictions on them are represented.
+    %
 	\begin{figure*}[t]
 		\centering
 		\includegraphics[width=2.\columnwidth]{fig_preds}
@@ -686,56 +718,54 @@
 		}
 		\label{fig:preds}
 	\end{figure*}
-
-
-	\subsection{Qualitative results}
-	\label{sec:qualitative_results}
-
-	Figure~\ref{fig:preds} displays three different instances of $5$-robot team
-	in which both the true positions of all robots and the predictions on them are represented.
-	In overall, the predictions
-	until $4$~seconds are shown to be reliable, although there are some errors while the
-	group of robots is turning with a high angle and the \emph{Head} changes its destination.
-	An observation is that the predictions tend to be located more inward the curve the team is moving on.
-	Yet, even when the prediction for a nearer robot is away from the truth, the prediction
-	for a farther robot appears correctly in some cases.
-	Such a correction occurs probably because even if an observation input from a nearer robot was
-	actually inaccurate, the past positions in input could alleviate the impact of it and still
-	help generate a decent estimation result.
-
+    %
+    In overall, the predictions until $4$~seconds are shown to be
+    reliable, although there are some errors while the group of robots
+    is turning with a high angle and the \emph{Head} changes its
+    destination. An observation is that the predictions tend to be
+    located more inward the curve the team is moving on. Yet, even when
+    the prediction for a nearer robot is away from the truth, the
+    prediction for a farther robot appears correctly in some cases. Such
+    a correction occurs probably because even if an observation input
+    from a nearer robot was actually inaccurate, the past positions in
+    input could alleviate the impact of it and still help generate a
+    decent estimation result.
 
 	\section{Discussion \& Future work}
 	\label{sec:discussion_and_future_work}
 
-	We have proposed a new design of regression model that can take into consideration
-	the historical behavioral sequences to solve the RTL problem on a real robotic platform.
-	Following the fundamental of scalable localization algorithm introduced in~\cite{CPR17},
-	our approach enables a robot at one end of string of robots to make repetitive predictions
-	on poses of unseen teammates by taking prediction outcomes for nearer robots as input to
-	prediction for farther ones.
+    We have proposed a new design of regression model that can take into
+    consideration the historical behavioral sequences to solve the RTL
+    problem on a real robotic platform. Following the fundamental of
+    scalable localization algorithm introduced in~\cite{CPR17}, our
+    approach enables a robot at one end of string of robots to make
+    repetitive predictions on poses of unseen teammates by taking
+    prediction outcomes for nearer robots as input to prediction for
+    farther ones.
 
-	We utilized a physical robotic system, \emph{Thymio}, to collect datasets from
-	$3$-robot and $5$-robot teams. Through empirical experiments, we explained that in overall,
-	the proposed machine learning model offers more accurate estimation than other baselines.
-	In addition, our analysis on timestep-wise errors helped
-	explore the benefits from encoding historical behavior sequences as well as a
-	drawback of it. Lastly, we visualized prediction outcomes from a set of samples to
-	illustrate specific cases where the features from past behaviors could also reduce the
-	estimation error passed from previous predictions for nearer robots.
+    We utilized a physical robotic system, \emph{Thymio}, to collect
+    datasets from $3$-robot and $5$-robot teams. Through empirical
+    experiments, we explained that in overall, the proposed machine
+    learning model offers more accurate estimation than other baselines.
+    In addition, our analysis on timestep-wise errors helped explore the
+    benefits from encoding historical behavior sequences as well as a
+    drawback of it. Lastly, we visualized prediction outcomes from a set
+    of samples to illustrate specific cases where the features from past
+    behaviors could also reduce the estimation error passed from
+    previous predictions for nearer robots.
 
-	In the future work, we could more deeply investigate the factors in model accuracy such as
-	the length of history or types of team behavior that might favor the prediction scheme.
-	Also, since the LSTM layer is exposed
-	to various evolutions of team shape during training, the vector representation of it
-	may be examined to characterize team states and finally detect abnormality of the whole
-	system.
-
+    In the future work, we could more deeply investigate the factors in
+    model accuracy such as the length of history or types of team
+    behavior that might favor the prediction scheme. Also, since the
+    LSTM layer is exposed to various evolutions of team shape during
+    training, the vector representation of it may be examined to
+    characterize team states and finally detect abnormality of the whole
+    system.
 
 {\small
 	\bibliographystyle{IEEEtran}
 	%\bibliography{IEEEabrv, IEEEexample}
 	\bibliography{IEEEexample}
 }
-
 
 \end{document}
