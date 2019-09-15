@@ -37,11 +37,14 @@
 % Automated synthesis of scalable algorithms for inferring non-local
 %properties to assist in multi-robot teaming
 
-\author{Taeyeong Choi, Sehyeok Kang, and Theodore P.~Pavlic % <-this % stops a space
-	\thanks{*This work was not supported by any organization}% <-this % stops a space
-	\thanks{T.~Choi, S.~Kang, and T. P.~Pavlic are with the School of Computing, Informatics, and Decision Systems Engineering,
-		Arizona State University, Tempe, AZ 85281, USA
-		{\tt\small \{tchoi4, skang66, tpavlic\}@asu.edu}}%
+\author{Taeyeong Choi, Sehyeok Kang, and Theodore P.~Pavlic, \IEEEmembership{Member, IEEE} % <-this % stops a space
+    \thanks{*This work was supported in part by NSF grant \#1735579.}% <-this % stops a space
+    \thanks{All authors are with Arizona State University, Tempe, AZ,
+        85281, USA. T.~Choi, S.~Kang, and T.~P.~Pavlic are with the
+        School of Computing, Informatics, and Decision Systems
+        Engineering. T.~P.~Pavlic is also with the School of
+        Sustainability and the School of Life Sciences.
+        {\tt\small \{tchoi4, skang66, tpavlic\}@asu.edu}}%
 }
 
 \begin{document}
@@ -160,7 +163,7 @@
 
 	This paper is organized as follow.
 	In Section~\ref{sec:related_work}, we explore related literature and the distinction of our work.
-	Section~\ref{sec:problem_description} explains more details about our setting of RTL problem.
+	Section~\ref{sec:rtl_problem} explains more details about our setting of RTL problem.
 	Then, we introduce our method, \emph{IPY-Net}, in Section~\ref{sec:method}, and
 	Section~\ref{sec:experiments} explains details about experiments performed on real robots,
 	including data collection, hyperparameters used for learning, and the results.
@@ -444,7 +447,6 @@
 	\setlength{\tabcolsep}{0.5em} % for the horizontal padding
 	{\renewcommand{\arraystretch}{1.2}% for the vertical padding
 		\begin{table}[t]
-			\label{table:data_description}
 			\centering
 			\begin{tabular}{|c|c|c|c|c|}
 				\hline
@@ -453,6 +455,7 @@
 				$5$ robots & $45.0$ minutes  & $8,736$ & $208$  \\ \hline
 			\end{tabular}
 			\caption{Description of data collected from executions of $3$-robot and $5$-robot teams.}
+			\label{table:data_description}
 		\end{table}
 	}
 
@@ -678,7 +681,8 @@
 
 {\small
 	\bibliographystyle{IEEEtran}
-	\bibliography{IEEEabrv, IEEEexample}
+	%\bibliography{IEEEabrv, IEEEexample}
+	\bibliography{IEEEexample}
 }
 
 
