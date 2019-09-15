@@ -470,7 +470,9 @@
 	the average error was reduced by $47\%$ and $40\%$ in the $3$-robot and $5$-robot case, 
 	respectively. In addition, considering the diameter of a \emph{Thymio} robot is 
 	$12$~cm, as only three robots are deployed, the average distance between the prediction 
-	and the true position is shorter than the length of the body. 
+	and the true position is shorter than the length of the body. This overall result proves 
+	the effectiveness of encoding a sequence of historical behaviors as a feature input
+	over the model fed only with very recent observation.  
 
 	
 	\subsection{Microscopic analysis}
@@ -495,19 +497,25 @@
     Especially, for first $4$ seconds, the prediction on \emph{Head} from our model appears 
     more accurate than the prediction on \emph{Follower~2} from the \emph{FC} implying that 
     until then, lower errors is produced on \emph{Follower~3} as well. 
-	
-	\subsubsection{Limitation} 
+    
+    \subsubsection{Limitation} 
 	\label{sec:limitation}
 	
 	Figure~\ref{fig:micro_eval} shows that using our regressor, we could trust the inference 
 	outcome until before first $3$~seconds and $4.5$~seconds depending on which robot to target between 
-	\emph{Follower~2} and \emph{Head}, since the body of a \emph{Thymio} robot is around 
+	\emph{Head} and \emph{Follower~2}, since the body of a \emph{Thymio} robot is around 
 	$12$~cm. This actually relies on the acceptable degree of error and the diameter of 
 	robotic platform used in the problem to tackle. Still, our result demonstrates the potential 
 	of effectively alleviating prediction error by adopting a well-designed model, and also, 
 	the relatively short time period of guaranteed localization may be sufficient to 
 	save on the communication bandwidth within the robot team. 
-		
+	
+	Also, the error distance when our model performs for \emph{Head} increases relatively slow 
+	initially but after some point, the increase rate gradually becomes higher. This is contrast to the 
+	case of \emph{FC}, which leads to a constant increase at each time step.  
+	This may be because as the historical features are extracted more from previous predictions 
+	instead of the truths, it could cause a more accumulated error in prediction outcome than 
+	using previous predictions only as observation input as in \emph{FC}.
 	
 	\begin{figure*}[t]
 		\centering
@@ -532,7 +540,8 @@
 	\label{sec:qualitative_results} 
 
 	Figure~\ref{fig:preds} displays both the true positions of all robots and the predictions on 
-	them. 
+	them for three different instances of $5$-robot team. As analyzed in Section\ref{sec:limitation}, 
+	the inference results appear reliable in this time frame.  
 	
 
 	\section{Discussion \& Future work}
