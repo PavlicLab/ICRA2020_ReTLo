@@ -57,7 +57,7 @@
 	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 	\begin{abstract}
 
-		We propose a more powerful machine learning approach, as an extension of \cite{CPR17},
+		We propose a more powerful machine learning approach, as an extension of~\cite{CPR17},
 		to tackle the Remote Teammate
 		Localization (RTL) problem where a robot member in a multi-robot team is to predict positions
 		of all other teammates only using the observations on its nearest neighbor without any
@@ -72,7 +72,7 @@
 		caging mission.
 		In this work, however, we focus mainly on 1) achieving better performance
 		to improve the applicability and 2) conducting evaluation in
-		more realistic environments. To be specific, we adopt a Long-Short Term Memory (LSTM) \cite{HS97}
+		more realistic environments. To be specific, we adopt a Long-Short Term Memory (LSTM)~\cite{HS97}
 		to learn possible evolution of behaviors in a modular team helping reduce the errors
 		from regression outcomes. Furthermore, while the previous work relied only on computer simulations,
 		all the experiments here are conducted on a physical two-wheeled robotic platform, \emph{Thymio},
@@ -91,13 +91,13 @@
 	according to relatively simple motion rules.
 	Such a property enables the entire system to perform in a distributed manner, and
 	also the behavior of it can be driven easily by a few leader robots to
-	eventually achieve the goal \cite{CPR17, DGRSS17, EB16, Stern18}.
+	eventually achieve the goal~\cite{CPR17, DGRSS17, EB16, Stern18}.
 	This implies that if a robot has an ability to reognize useful property, e.g.) formation,
 	of the whole team in real time using its local sensors,
 	it could present adjustive actions accordingly to better promote a collective behavior
 	for the sake of the team.
 
-	In \cite{CPR17}, we suggested a machine learning method to solve the
+	In~\cite{CPR17}, we suggested a machine learning method to solve the
 	RTL problem where a robot, called \emph{Tail} at one end of a line formation of
 	a multi-robot team, is to predict positions of all other teammates only using local
 	observations about a single nearby teammate. Since each robot has a limited sensor
@@ -150,12 +150,12 @@
 	team shape over time under physical constraints.
 	The sequence encoding could help filter out impossible solution candidates
 	that the model might produce if it only utilized the recent observations on
-	the neighbor, as in \cite{CPR17},
+	the neighbor, as in~\cite{CPR17},
 
 	Not only a more powerful model but also a more realistic experiment
 	environment are prepared. Previously, we
 	conducted all demonstrations on computer simulations, but in this work,
-	a physical two-wheeled robotic platform, \emph{Thymio} \cite{Shin14}, is mainly
+	a physical two-wheeled robotic platform, \emph{Thymio}~\cite{Shin14}, is mainly
 	used to set up more realistic environments.
 
 %	All codes are available online\footnote{http://www.github.com/ctyeong}, and supplementary videos
@@ -192,8 +192,8 @@
 
 	Although the RTL problem is to localize robots, as mentioned in
 	Section~\ref{sec:intro}, it has unique properties compared to conventional
-	localization problems including	cooperative localization or tracking
-	\cite{LSRB16, FSDO10, CX14, DMG15}.
+    localization problems including	cooperative localization or
+    tracking~\cite{LSRB16, FSDO10, CX14, DMG15}.
 	It is rather about robot behavior as a container to
 	represent useful team-level state and learning to decode it.
 	We discuss related literature below that introduced scenarios to use and decrypt
@@ -209,7 +209,7 @@
 	multi-robot team, using only locally obtainable information in the aspect of a robot
 	member. This is because the knowledge about global configuration could
 	help make a better decision for the sake of whole team. In this spirit,
-	the authors in \cite{BG14, BSB16} sampled a subset of robot agents from a swarm to
+	the authors in~\cite{BG14, BSB16} sampled a subset of robot agents from a swarm to
 	monitor their local interactions and classify the swarm-level behavior.
 	In fact, they implemented relatively simple robots run on a virtual simulator and
 	predefined selections of global behaviors such as \emph{flock} and \emph{torus}.
@@ -222,8 +222,8 @@
 	One of the main assumptions in RTL is the simple motion rule of each robot which
 	has dependency on the state of its neighbors. This implies that the behavior of
 	neighbors could be a method to encrypt the state change of more remote teammates.
-	In \cite{NPCBW12, DCV16}, Novitzky at el. and Das et al. employed a type of
-	special action, which appeared like "waggle dance" of honeybees \cite{VonFrisch67},
+    Novitzky at el.~\cite{NPCBW12} and Das et al.~\cite{DCV16} employed a type of
+    special action, which appeared like ``waggle dance'' of honeybees~\cite{VonFrisch67},
 	in robot team so that the behavior could convey a meaning between robots.
 	Our work also encourages a robot to decode behavioral cues, but it occurs without
 	entering an explicit phase of signaling. In other words, the robot has to learn
@@ -232,7 +232,7 @@
 	\subsection{Robot dynamics learning}
 	\label{sec:robot_dynamics_learning}
 
-	Byranvan and Fox in \cite{BF17} proposed a deep learning approach
+	Byranvan and Fox~\cite{BF17} proposed a deep learning approach
 	to predict the next visual frame given a current frame and the information
 	of force that would affect one of the shown objects. One of their examples was
 	to understand the dynamics of robotic arms and the relationship with control
@@ -250,7 +250,7 @@
 	\subsection{Scalable teammate localization}
 	\label{sec:scalable_teammate_localization}
 
-	In our previous work \cite{CPR17}, the detailed configurations for RTL
+	In our previous work~\cite{CPR17}, the detailed configurations for RTL
 	problem were first introduced with realistic assumptions.
 	To solve the problem particularly with little robot-to-robot communication,
 	the \emph{Tail} robot is designed to use a repetitive strategy of inference
@@ -266,7 +266,7 @@
 	\section{RTL Problem \& System Design}
 	\label{sec:rtl_problem}
 
-	In our previous work \cite{CPR17} , we introduced a design of robotic system and the RTL
+	In our previous work~\cite{CPR17} , we introduced a design of robotic system and the RTL
 	problem to solve on it.
 	For this work, we build the robot team based on the previous design, where
 	the robot team is implemented to move in a line formation
@@ -282,7 +282,7 @@
 
 	Every robot has the same capability of sensor and motion under the same
 	kinematic constraints, although they may take different actions according to
-	motion rules depending on their roles, as formulated in \cite{CPR17}. This catalyzes the
+	motion rules depending on their roles, as formulated in~\cite{CPR17}. This catalyzes the
 	 \emph{Follower} robots and the \emph{Tail} to behave based on the current positions of their close neighbors. For simplicity, we assume that every robot
 	 has an ability to accelerate fast enough to always keep the neighbors within their
 	 sensory range.
@@ -315,7 +315,7 @@
 
 %	This may simulate some realistic scenarios where
 %	an unexpected technical issue occurs at a time point disabling any robot-to-robot
-%	data	transfer, or the robot team intentionally stops the information
+%	data transfer, or the robot team intentionally stops the information
 %	sharing when entering some specific regions either for security or for saving on the
 %	communication cost.
 
@@ -324,7 +324,7 @@
 	\label{sec:method}
 
 %	In this section, we introduce more details about our method.
-	First, we briefly revisit the scalable prediction approach, shown in \cite{CPR17},
+	First, we briefly revisit the scalable prediction approach, shown in~\cite{CPR17},
 	to train the model on a small team and to be able to produce predictions
 	even on a larger team without additional training.
 	Then, we present the regressor built for learning not only with observations on
@@ -334,7 +334,7 @@
 	\subsection{Scalable prediction}
 	\label{sec:scalable_prediction}
 
-	The basic idea in \cite{CPR17} is that the \emph{Tail} uses all the available information
+	The basic idea in~\cite{CPR17} is that the \emph{Tail} uses all the available information
 	such as the observation on its neighbor
 	at $t$ and $t+1$ to predict $\vec{p}_{H@t}$ of \emph{Head} in its subteam of $3$~robots,
 	which is actually \emph{Follower~2} in the entire team.
@@ -369,7 +369,7 @@
 	we use absolute direction in this work because assuming robots equipped
 	with an instrument such as a electric compass is acceptable.
 
-	Previously, in \cite{CPR17} we used a series of fully-connected (FC) layers
+	Previously, in~\cite{CPR17} we used a series of fully-connected (FC) layers
 	to only take the observation input and estimate the position and orientation
 	of interest:
 
@@ -396,7 +396,7 @@
 		and $o \in \mathbb{R}^{k}$ is the encoded observation feature
 		where $k$ is the size of FC layer.
 
-	A historical sequence of poses is encoded by a bi-directional LSTM layer \cite{Wu16}:
+	A historical sequence of poses is encoded by a bi-directional LSTM layer~\cite{Wu16}:
 
 	\begin{equation}
 	h = f_{hist}(X_{hist})
@@ -460,16 +460,16 @@
 	}
 
 	To demonstrate the effectiveness of our method, we employ a physical robotic platform,
-	\emph{Thymio} \cite{Shin14}, which allows to execute a team of small two-wheeled
+	\emph{Thymio}~\cite{Shin14}, which allows to execute a team of small two-wheeled
 	mobile robots. We use a central computer connected with a overhead camera to simulate
 	better proximity
 	sensors, a more powerful computing power, and a GPS system that would easily run on each robot in
 	real scenario.
 	Specifically, the central system is set up to detect the locations of robots in real
 	time using off-the-shelf computer vision packages
-	and communicate with a \emph{Raspberry Pi} board \cite{Upton14} on each robot to send
+	and communicate with a \emph{Raspberry Pi} board~\cite{Upton14} on each robot to send
 	the next command relying on its neighbors.
-	The command was essentially obtained based on the formulation in \cite{CPR17}, but
+	The command was essentially obtained based on the formulation in~\cite{CPR17}, but
     as the robot was asked to move backward, we just set it not to move for its
 	neighbor behind to catch it up, which helped gain smoother trajectories of the team
 	and eventually avoid possible collisions between robots.
@@ -512,7 +512,7 @@
 
 		\item \emph{FC}:
 		Two fully connected layers run in the predictor without historical
-		information, which is based on \cite{CPR17}.
+		information, which is based on~\cite{CPR17}.
 
 	\end{itemize}
 
@@ -657,7 +657,7 @@
 
 	We have proposed a new design of regression model that can take into consideration
 	the historical behavioral sequences to solve the RTL problem on a real robotic platform.
-	Following the fundamental of scalable localization algorithm introduced in \cite{CPR17},
+	Following the fundamental of scalable localization algorithm introduced in~\cite{CPR17},
 	our approach enables a robot at one end of string of robots to make repetitive predictions
 	on poses of unseen teammates by taking prediction outcomes for nearer robots as input to
 	prediction for farther ones.
