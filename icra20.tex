@@ -538,30 +538,29 @@
 	\section{Discussion \& Future work}
 	\label{sec:discussion_and_future_work}
 	
-	We have shown 
+	We have proposed a new design of regression model that can take into consideration 
+	the historical behavioral sequences to solve the RTL problem on a real robotic platform. 
+	Following the fundamental of scalable localization algorithm introduced in \cite{CPR17}, 
+	our approach enables a robot at one end of string of robots to make repetitive predictions 
+	on poses of unseen teammates by taking prediction outcomes for nearer robots as input to 
+	prediction for farther ones.
 	
-	We have shown \emph{IPY-Net}, a powerful approach to tackle the remote localization problem 
-	where a robot with limited sensors is to predict positions of all others only using 
-	observations about its nearest neighbor. 
-	\emph{IPY-Net} follow the fundamental spirit of \cite{CPR17} to apply a predictor 
-	trained for a small robot team to a chain of them in a larger team, since it 
-	can provide a scalable feature without re-training.   
-	The distinction in \emph{IPY-Net} is , however, to use a sequence of historical knowledge and 
-	make predictions based on imagination of robot states including position and orientation.
-	We expected learning with history would help regulate the model on physical constraints on 
-	the team formation, and also the imaginative representation could contain 
-	certainty about the prediction, which would bring about more robust performance. 
+	We utilized a physical robotic system, \emph{Thymio}, to collect datasets from 
+	$3$-robot and $5$-robot teams. Through empirical experiments, we explained that in overall,
+	the proposed machine learning model offers more accurate estimation than other baselines.
+	In addition, our analysis on timestep-wise errors helped 
+	explore the benefits from encoding historical behavior sequences as well as a
+	drawback of it. Lastly, we visualized prediction outcomes from a set of samples to 
+	illustrate specific cases where the features from past behaviors could also reduce the 
+	estimation error passed from previous predictions for nearer robots. 
 	
-	The experiment results were obtained using a realistic robotic platform to prove 
-	that our method outperforms not only the regressor
-	introduced in \cite{CPR17} but also a general state-of-the-art neural network 
-	model that is able to use historical data. Especially, our model can present 
-	stable performance even when the input contains some errors which have occurred in 
-	previous prediction. 
-	  
-	
-	In future work, 
-	
+	In the future work, we could more deeply investigate the factors in model accuracy such as 
+	the length of history or types of team behavior that might favor the prediction scheme. 
+	Also, since the LSTM layer is exposed 
+	to various evolutions of team shape during training, the vector representation of it 
+	may be examined to characterize team states and finally detect abnormality of the whole
+	system. 
+	 
 	
 {\small
 	\bibliographystyle{IEEEtran}
