@@ -382,7 +382,7 @@
 		and $o \in \mathbb{R}^{k}$ is the encoded observation feature 
 		where $k$ is the size of FC layer. 
 		
-	A historical sequence of poses is encoded by a bidirectional LSTM layer: 
+	A historical sequence of poses is encoded by a bi-directional LSTM layer \cite{Wu16}: 
 
 	\begin{equation}
 	h = f_{hist}(X_{hist})
@@ -404,55 +404,23 @@
 	Y_{p} = g_{p}(\phi(o, h)),\\
 	Y_{\theta}= g_{\theta}(\phi(o, h)) 
 	\end{split}
+	\label{eq:regression_output}
 	\end{equation}
 	
 	where 
 	$Y_{p} = \hat{\vec{p}}_{H@t}$ and
 	$Y_{\theta} = (\hat{\theta}_{F@t}, \hat{\theta}_{H@t}, \hat{\theta}_{F@t+1})$.
 	
+	For fusion of $o$ and $h$ features, layer $\phi$ in Equation~\ref{eq:regression_output} 
+	could be implemented by any type of layer. During our experiments, we 
+	built a layer to simply concatenate the features and achieved a satisfactory 
+	performance. 
 	
-	Previously, the following inputs were needed to 
-	predict the position of \emph{Head} at time $t$ given the team of 
-	\emph{H, F,} and \emph{T}: $\vec{p}_{F@t}$, $\theta_{F@t}$, and $\vec{p}_{F@t+1}$.
-	Then, $\theta_{F@t+1}$ was estimated using the prediction outcome on $\vec{p}_{H@t}$, 
-	additionally. Throughout such a process, using three separate vanilla neural network, 
-	one for each target value, was suggested, but running one model that can regress on the 
-	three values at the same time may work as well.
-	
-	Here, we propose a deep neural network model for regression, shown 
-	in Fig.~\ref{fig:DL_Pipeline}, to take advantage of not only the 
-	traditional types of input but also historical poses of the team.
-	
-	First, \emph{ObsEncFC} layer encodes the observation about the \emph{Follower} $\vec{p}_{F}$
-	
-	
-	where $X_o \in \mathbb{R}^{1 \times 4}$ and $X_h \in \mathbb{R}^{t \times 4}$
-	
-	\begin{equation}
-	Y_p = g_{p}(F_t)
-	\end{equation}
-
-	\begin{equation}
-	Y_\theta = g_{\theta}(F_t)
-	\end{equation}
-
-	
-	
-	\subsubsection{ObsEncFC}
-	This layer works 
-	
-	\subsubsection{HistEncLSTM}
-	e	
-		
-	\begin{itemize}
-		\item ObsEncFC
-		\item HistEncLSTM
-		\item FusionFC
-		\item PDecFC
-		\item ODecFC
-	\end{itemize}
-	
-	
+	Furthermore, $\hat{\theta}_{F@t+1}$ gained with $\hat{\theta}_{F@t}$ is
+	estimated again when $\hat{\theta}_{F@t+2}$ is estimated at the next 
+	prediction step. Although our model keeps the later estimate only, 
+	we discovered that involving it in both steps can regulate the regressor 
+	during learning to produce a model that achieves a better score in validation. 
 	
 	\section{Experiments} 
 	\label{sec:experiments} 
