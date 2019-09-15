@@ -261,44 +261,58 @@
 	an off-the-shelf robotic platform. 
 	
 	
-	\section{RTL Problem} 
+	\section{RTL Problem \& System Design} 
 	\label{sec:rtl_problem}
 	
-	Basically, we follow the problem description for the RTL
-	first introduced in \cite{CPR17}. A robot team moves in a line formation 
+	In our previous work \cite{CPR17} , we introduced a design of robotic system and the RTL
+	problem to solve on it. 
+	For this work, we build the robot team based on the previous design, where 
+	the robot team is implemented to move in a line formation 
 	in which each robot has two adjacent neighbors except for the ones at the ends, 
 	each of which has only one neighbor. 
 	The robot on one end is called \emph{Head}, which is the only robot that 
 	drives the team toward a destination predetermined in an independent manner.
 	The robot on the opposite end is named \emph{Tail}, and all other robots 
 	in-between are \emph{Follower}~$i$ where $i \in \{1, 2, ..., n-2\}$ starting
-	from the robot closest to the \emph{Tail}.
+	from the robot closest to the \emph{Tail}. 
+%	For better readability, we
+%	interchangeably denote the robots as \emph{H, T} and $F_{i}$. 
+	 
 	Every robot has the same capability of sensor and motion under the same 
 	kinematic constraints, although they may take different actions according to 
 	motion rules depending on their roles, as formulated in \cite{CPR17}. This catalyzes the
 	 \emph{Follower} robots and the \emph{Tail} to behave based on the current positions of their close neighbors. For simplicity, we assume that every robot 
 	 has an ability to accelerate fast enough to always keep the neighbors within their 
 	 sensory range.
-%	As will be explained in 
-%	Section~\ref{sec:experiments}, we utilize the computational, sensory capacity of a central 
-%	computer in experiments. Therefore, technically the global positions are used to calculate the next 
-%	spatial destination of each robot, and then the formula in [] helps generate an actual motion 
-%	command to operate two wheels to change its pose according to nonholonomic kinematics. 
 	
 	The RTL is to localize all the teammates from the view of 
 	\emph{Tail} only using locally visible information, which is the position of 
-	\emph{Follower}~$1$ at every time step. We assume that until a specific time instant 
-	$t$, all the information about positions and orientations of all robots 
+	\emph{Follower}~$1$ at every time step. 	
+	We assume that until a specific time instant 
+	$\tau$, all the information about positions and orientations of all robots 
 	have been shared especially with the \emph{Tail} robot, 
 	possibly via global communication,
-	but from $t+1$, such information becomes no longer available causing a need of the
+	but from $\tau+1$, such information becomes no longer available causing a need of the
 	localization technique only utilizing local observations.	
 	This may simulate some realistic scenarios where 
 	an unexpected technical issue occurs at a time point disabling any robot-to-robot
 	data	transfer, or the robot team intentionally stops the information 
 	sharing when entering some specific regions either for security or for saving on the
-	 communication cost.
-	 
+	communication cost.
+	
+	More formally, at the time instant $\tau$, the following set of poses of all teammates is 
+	available: 
+	
+	\begin{equation*}
+		\{\vec{p}_{r@t},\theta_{r@t}\} 
+	\end{equation*}
+	
+	where $r \in \{T, F_{1}, F_{2}, ..., F_{n-2}, H\}$ and $t \leq \tau$. 
+	
+	At each time $t > \tau$, the position of $F_1$, $\vec{p}_{F_{1@t}}$ is observed.  
+	Thus, the RTL problem is to use all the available information to predict 
+	the set of poses at $t' > \tau$. 
+	
 	
 	\section{Method}
 	\label{sec:method}
@@ -314,17 +328,26 @@
 	\subsection{Scalable prediction} 
 	\label{sec:scalable_prediction}
 	
-	We refer to the fundamental inference scheme of our previous work \cite{CPR17} in which 
-	a regressor is trained in a modular subteam of $3$ robots, and when employed 
-	for a larger team, repetitive predictions are performed along with the series
-	of $3$-robot modular teams until reaching the prediction step for \emph{Head}. 
+	We refer to the fundamental inference scheme of our previous work \cite{CPR17}. 
+	The basic idea is the \emph{Tail} robot can observe positions of its neighbor, 
+	\emph{Follower~1}, at two time steps and use it to predict the position of 
+	\emph{Follower~2}. 
+	
+	 in which 
+	a regressor is trained in a modular subteam of $3$ robots to obtain predictions 
+	on poses of the members of the subteam. 
+	When employed for a larger team, a repetitive manner of prediction is performed 
+	along with the series of $3$-robot modular teams until finally reaching the prediction 
+	step for \emph{Head}. 
 	More specifically, given a robot team of size $n$, the \emph{Tail} robot 
 	is allowed to gain the position of \emph{Follower 1}, $\vec{p}_{F}$ every 
 	single time step. Once 
 	
+	\subsubsection{History, observation, and target}
 	
-	\subsection{Neural network}
-	\label{sec:neural_network}
+	
+	\subsection{Local behavior sequence learning in LSTM}
+	\label{sec:local_behavior_sequence_learning_in_lstm}
 	 
 	
 	
