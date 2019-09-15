@@ -631,16 +631,16 @@
 	\subsection{Microscopic analysis}
 	\label{sec:microscopic_analysis}
 
-    In this section, we analyze the performance of the machine learning
-    based models in more fine-grained perspective. For each model,
+    In this section, we analyze the performance of the machine-learning
+    based models from a more fine-grained perspective. For each model,
     Fig.~\ref{fig:micro_eval} visualizes the step-wise error for
-    different target robots~(\emph{Follower 2} and \emph{Head}) in
+    different target robots~(i.e., \emph{Follower 2} and \emph{Head}) in
     $5$-robot case, which is calculated by averaging the errors of each
-    step across instances. Such a way of evaluation can offer us a
-    crucial insight to understand an approximate time frame within which
-    a level of average error could be ensured for a specific robot.
-    During this evaluation, we also had $5$~separate training sessions
-    to gain the mean and the variability of the performance.
+    step across instances. By doing so, we can better understand the
+    approximate time frame within which estimation error stays below an
+    acceptable error level. During this evaluation, we also had
+    $5$~separate training sessions to gain the mean and the variability
+    of the performance.
     %
 	\begin{figure}[t]
 		\centering
@@ -660,46 +660,31 @@
     prediction method where previous errors would negatively impact the
     prediction power for the following steps. In a similar sense, each
     model brings about larger error on the \emph{Head} prediction than
-    on the \emph{Follower 2}.
-
-    At every time step, our approach causes less error than the
-    \emph{FC} model for any robot, and the visualized error bars confirm
-    that the performance gap is significant in any case. Especially, for
-    first $4$ seconds, the prediction on \emph{Head} from our model
-    appears more accurate than the prediction on \emph{Follower~2} from
-    the \emph{FC} implying that until then, lower errors is produced on
-    \emph{Follower~3} as well.
-
-    \subsubsection{Limitation}
-	\label{sec:limitation}
-
-    Figure~\ref{fig:micro_eval} shows that using our regressor, we could
-    trust the inference outcome until before first $3$~seconds and
-    $4.5$~seconds depending on which robot to target between \emph{Head}
-    and \emph{Follower~2}, since the body of a \emph{Thymio} robot is
-    around $12$~cm. This actually relies on the acceptable degree of
-    error and the diameter of robotic platform used in the problem to
-    tackle. Still, our result demonstrates the potential of effectively
-    alleviating prediction error by adopting a well-designed model, and
-    also, the relatively short time period of guaranteed localization
-    may be sufficient to save on the communication bandwidth within the
-    robot team.
-
-    Also, the error distance when our model performs for \emph{Head}
-    increases relatively slow initially but after some point, the
-    increase rate gradually becomes higher. This is contrast to the case
-    of \emph{FC}, which leads to a constant increase at each time step.
-    This may be because as the historical features are extracted more
-    from previous predictions instead of the truths, it could cause a
-    more accumulated error in prediction outcome than using previous
-    predictions only as observation input as in \emph{FC}.
+    on the \emph{Follower 2}. However, at every time step, our approach
+    causes less error than the \emph{FC} model for any robot, and the
+    visualized error bars confirm that the performance improvement of
+    our approach is significant in every case. Especially for first $4$
+    seconds, the prediction on \emph{Head} from our model appears more
+    accurate than the prediction on \emph{Follower~2} from the \emph{FC}
+    implying that until then, our method also has less error for the
+    estimate of \emph{Follower~3} as well. Having said that, the more
+    rapid increase in error of our method for the position of
+    \emph{Head} may highlight the liability of relying more on prior
+    information for future predictions. Nevertheless, these results
+    demonstrate the potential of our approach to reduce the
+    communication bandwidth necessary for a multi-robot team to perform
+    localization.
 
 	\subsection{Qualitative results}
 	\label{sec:qualitative_results}
 
-    Figure~\ref{fig:preds} displays three different instances of
+    Figure~\ref{fig:preds} shows images of three different instances of
     $5$-robot team in which both the true positions of all robots and
-    the predictions on them are represented.
+    the predictions on them are represented. The triangles indicate the
+    true positions and orientations, where the yellow triangle is the
+    \emph{Tail} and the red triangle is the \emph{Head}. The circles
+    indicate the estimated positions of the two farthest \emph{Follower}
+    robots as well as the \emph{Head}.
     %
 	\begin{figure*}[t]
 		\centering
@@ -714,24 +699,25 @@
 			The colored triangles with a black line through the center are the
 			results of localization detection used in data collection stage.
 			A small red dot on the arena in each frame is the random destination the
-			\emph{Head} is moving toward, which is resampled at intervals.
+			\emph{Head} is moving toward, which is re-sampled at intervals.
 		}
 		\label{fig:preds}
 	\end{figure*}
     %
-    In overall, the predictions until $4$~seconds are shown to be
+    Predictions until $4$~seconds are shown to be
     reliable, although there are some errors while the group of robots
-    is turning with a high angle and the \emph{Head} changes its
-    destination. An observation is that the predictions tend to be
-    located more inward the curve the team is moving on. Yet, even when
-    the prediction for a nearer robot is away from the truth, the
-    prediction for a farther robot appears correctly in some cases. Such
-    a correction occurs probably because even if an observation input
-    from a nearer robot was actually inaccurate, the past positions in
-    input could alleviate the impact of it and still help generate a
-    decent estimation result.
+    is turning with a high angle and when the \emph{Head} changes its
+    destination. Predictions tend to be biased more toward the inside of
+    the curve the team is moving on. Unexpectedly, at any instant of
+    time, the maximum position error is often at intermediate
+    \emph{Follower} robots and not at the most distant \emph{Head}
+    robot. Such corrections may be the result of using historical
+    information to constrain the possible locations of farther robots,
+    as in data fusion techniques that use formal dynamical models to
+    physically constrain estimator variance. However, our approach does
+    not make use of explicit formal dynamical models.
 
-	\section{Discussion \& Future work}
+	\section{Summary \& Future work}
 	\label{sec:discussion_and_future_work}
 
     We have proposed a new design of regression model that can take into
