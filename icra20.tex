@@ -201,11 +201,12 @@
     Section~\ref{sec:related_work}, we explore related literature and
     the distinction of our work. Section~\ref{sec:rtl_problem} explains
     more details about our setting of RTL problem. Then, we introduce
-    our \emph{IPY-Net} method in Section~\ref{sec:method}, and
-    Section~\ref{sec:experiments} explains details about experiments
-    performed on real robots, including data collection, hyperparameters
-    used for learning, and the results. Lastly, we summarize our
-    research and discuss future directions in
+    our proposed deep-learning solution method in
+    Section~\ref{sec:method}. In Section~\ref{sec:experiments}, we
+    provide details about experiments performed on real robots,
+    including data collection and hyperparameters used for learning. We
+    then summarize experimental results in Section~\ref{sec:results}.
+    Lastly, we summarize our research and discuss future directions in
     Section~\ref{sec:discussion_and_future_work}.
 
 	\section{Related work}
@@ -371,7 +372,7 @@
 %	sharing when entering some specific regions either for security or for saving on the
 %	communication cost.
 
-	\section{Method}
+	\section{Proposed Model}
 	\label{sec:method}
 
     Here, we first briefly review our scalable 3-to-many prediction
@@ -496,9 +497,53 @@
     performed an extensive random search with choices of other learning
     parameters and finally set $k=80, m=160$, and $d=160$.
 
-	\section{Experiments}
+	\section{Experimental Methodology}
 	\label{sec:experiments}
 
+    \subsection{Robotic platform}
+
+    To demonstrate the effectiveness of our method, we employ a
+    commercially available, two-wheeled physical robotics platform,
+    \emph{Thymio}~\cite{Shin14}, which allows to execute a team of small
+    two-wheeled mobile robots. Although each \emph{Thymio} robot has
+    sensing and computation capabilities, we used a central computer
+    connected with a overhead camera to simulate better proximity
+    sensors, more powerful computing power, and a GPS system that would
+    be generalizable to other robotic platforms run in a similar
+    physical scenario. Specifically, the central system is configured to
+    detect the locations of robots in real time using off-the-shelf
+    computer vision packages and communicate with a \emph{Raspberry Pi}
+    board~\cite{Upton14} mounted on each robot, which implements control
+    laws based on the received positional information about neighboring
+    robots. The \emph{Tail} and each \emph{Follower} robots were
+    configured, as in our previous simulation work~\cite{CPR17}, to
+    regulate distance with the robot ahead of it. Regulation of the
+    distance behind each \emph{Follower} robot was achieved through
+    stopping (as opposed to backward motion), which reduced higher
+    frequency oscillations in individual robot motion. Additional
+    details about the physical constraints of the laboratory testbed are
+    provided in a supplementary video.
+
+    \subsection{Data collection}
+
+    We collected the pose data from two robot teams, one of
+    $3$~robots and one of $5$~robots, that ran separately in an arena of
+    $2.5 m \times 1.9 m$. The location detection was performed at
+    $4$~frames per second at each of which a new command was received by
+    each robot. Also, all pose data was collected at the rate of
+    $2$~frames per second, which was not necessarily synchronized with
+    the command timing. We set the length of history to
+    $5$~seconds~($10$~time steps in data recording) and the time window
+    for prediction to the next $8$~seconds~($16$~time steps).
+    Table~\ref{table:data_description} provides details about the
+    collected data, where a \emph{Sample} refers to a set of coordinates and
+    orientations in a 3-robot group with which a prediction can be
+    performed, and an \emph{Instance} is set of all available samples
+    for $13$~seconds from the entire team. To reduce temporal
+    autocorrelation to help ensure independence of instances, we
+    clustered recordings so that instances are separated by at least
+    $7$~seconds.
+    %
 	\setlength{\tabcolsep}{0.5em} % for the horizontal padding
 	{\renewcommand{\arraystretch}{1.2}% for the vertical padding
 		\begin{table}[t]
@@ -514,59 +559,19 @@
 		\end{table}
 	}
 
-    To demonstrate the effectiveness of our method, we employ a physical
-    robotic platform, \emph{Thymio}~\cite{Shin14}, which allows to
-    execute a team of small two-wheeled mobile robots. We use a central
-    computer connected with a overhead camera to simulate better
-    proximity sensors, a more powerful computing power, and a GPS system
-    that would easily run on each robot in real scenario. Specifically,
-    the central system is set up to detect the locations of robots in
-    real time using off-the-shelf computer vision packages and
-    communicate with a \emph{Raspberry Pi} board~\cite{Upton14} on each
-    robot to send the next command relying on its neighbors. The command
-    was essentially obtained based on the formulation in~\cite{CPR17},
-    but as the robot was asked to move backward, we just set it not to
-    move for its neighbor behind to catch it up, which helped gain
-    smoother trajectories of the team and eventually avoid possible
-    collisions between robots.
+    \subsection{Model training and performance evaluation}
 
-    Although the experiment setting involves some external computations
-    and sensors due to limited capability of \emph{Thymio}, most of
-    realistic assumptions still hold from the physical constraints and
-    disturbance during execution. For better understanding of readers on
-    the prepared environment, we submit a supplementary video.
-
-    Finally, we collected the pose data from two robot teams, one of
-    $3$~robots and one of $5$~robots, that ran separately in an arena of
-    $2.5 m \times 1.9 m$. The location detection was performed at $4$
-    frames per second at each of which a new command was received by
-    each robot. Also, all pose data was collected at the rate of $2$
-    frames per second, which was not necessarily synchronized with the
-    command timing. We set the length of history to
-    $5$~seconds~($10$~time steps in data recording) and the time window
-    for prediction to the next $8$~seconds~($16$~time steps).
-    Table~\ref{table:data_description} provides details about the
-    collected data where a sample refers to a set of coordinates and
-    orientations in a subteam with which a prediction can be performed,
-    and an instance is set of all available samples for $13$ seconds
-    from the entire team. We clustered recordings so that an instance
-    has at least $7$-second time gap to another ensuring the motions
-    between separate instances have little dependency.
-
-    $60$\% data from the $3$-robot team is used to train our model, and
-    another $10\%$ was set aside for validation. At each epoch of
-    training, a validation followed so that the learned weights that
-    achieved the best validation performance were saved. The rest of
-    $20\%$ data and all the data from $5$-robot were used to test the
-    model.
-
-    Our model is implemented in \emph{Tensorflow} \emph{Python}
-    library~\footnote{https://www.tensorflow.org/} to realize the entire
+    Our model is implemented in the \emph{Tensorflow} \emph{Python}
+    library\footnote{https://www.tensorflow.org/} to realize the entire
     pipeline, and it was trained to minimize loss functions such as
     Euclidean distance and mean absolute errors for position and
-    orientation estimation, respectively.
-
-	We compare our proposed model to two different approaches such as:
+    orientation estimation, respectively. $60$\% data from the $3$-robot
+    team is used to train our model, and another $10\%$ was set aside
+    for validation. At each epoch of training, a validation followed so
+    that the learned weights that achieved the best validation
+    performance were saved. The rest of $20\%$ data and all the data
+    from $5$-robot were used to test the model. We compare our proposed
+    model to two different alternative approaches:
     %
 	\begin{itemize}
 		\item \emph{$2$X Heuristic}:
@@ -576,25 +581,20 @@
 
 		\item \emph{FC}:
             Two fully connected layers run in the predictor without
-            historical information, which is based on~\cite{CPR17}.
+            historical information, which is based on our previous
+            proof-of-concept work~\cite{CPR17}.
 
 	\end{itemize}
 
-%	\subsection{Data collection}
-%	\label{sec:data_collection}
-
-
-%	\subsection{Results}
-%	\label{sec:results}
+    \section{Results}
+    \label{sec:results}
 
 	\subsection{Overall performance}
 	\label{sec:overall_performance}
 
-    First of all, we evaluate each model in a macroscopic view, as shown
-    in Fig.~\ref{fig:macro_eval}, where each model is tested with the
-    test data of $3$-robot team and $5$-robot team separately, and in
-    each case, the averaged error for all position predictions is
-    reported. Specifically, in the case of $3$~robots, the average error
+    In Fig.~\ref{fig:macro_eval}, we compare the averaged error for
+    position predictions of the three models in both the $3$-robot and
+    $5$-robot team cases. In the case of $3$~robots, the average error
     is calculated only on the prediction for the \emph{Head} robot,
     while in the $5$-robot case, it involves all predictions for
     \emph{Follower 2}, \emph{Follower 3}, and \emph{Head}. Moreover, for
@@ -612,22 +612,21 @@
         \label{fig:macro_eval}
 	\end{figure}
 
-    Figure~\ref{fig:macro_eval} displays that the machine learning
-    methods outperform the \emph{2X Heuristic} in any case. In
-    particular, the performance gap between \emph{2X Heuristic} and
-    \emph{FC} becomes much larger in $5$-robot case suggesting that
-    during the data collection, we added much randomness to the shape of
-    the robot team.
-
-    Also, our model clearly shows the performance improvement over the
-    \emph{FC} model, since the average error was reduced by $47\%$ and
-    $40\%$ in the $3$-robot and $5$-robot case, respectively. In
-    addition, considering the diameter of a \emph{Thymio} robot is
-    $12$~cm, as only three robots are deployed, the average distance
-    between the prediction and the true position is shorter than the
-    length of the body. This overall result proves the effectiveness of
-    encoding a sequence of historical behaviors as a feature input over
-    the model fed only with very recent observation.
+    Figure~\ref{fig:macro_eval} shows that the machine learning methods
+    outperform the \emph{2X Heuristic} in any case. In particular, the
+    performance gap between \emph{2X Heuristic} and \emph{FC} becomes
+    much larger in $5$-robot case suggesting that realistic
+    stochasticity presents a significant challenge to the
+    straightforward \emph{2X Heuristic} case. Furthermore, our model
+    clearly shows the performance improvement over the \emph{FC} model,
+    since the average error was reduced by $47\%$ and $40\%$ in the
+    $3$-robot and $5$-robot case, respectively. In addition, considering
+    the diameter of a \emph{Thymio} robot is $12$~cm, as only three
+    robots are deployed, the average distance between the prediction and
+    the true position is shorter than the length of the robot body. This
+    overall result proves the effectiveness of encoding a sequence of
+    historical behaviors as a feature input over the model fed only with
+    very recent observation.
 
 	\subsection{Microscopic analysis}
 	\label{sec:microscopic_analysis}
