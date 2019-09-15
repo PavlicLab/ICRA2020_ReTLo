@@ -720,33 +720,44 @@
 	\section{Summary \& Future work}
 	\label{sec:discussion_and_future_work}
 
-    We have proposed a new design of regression model that can take into
-    consideration the historical behavioral sequences to solve the RTL
-    problem on a real robotic platform. Following the fundamental of
-    scalable localization algorithm introduced in~\cite{CPR17}, our
-    approach enables a robot at one end of string of robots to make
-    repetitive predictions on poses of unseen teammates by taking
-    prediction outcomes for nearer robots as input to prediction for
-    farther ones.
+    By formally incorporating historical data into the design of a
+    scalable, localization regression module, we have improved upon our
+    previous work~\cite{CPR17} in estimating the positions of robots in
+    a multi-robot team using only observations of a single, nearest
+    neighbor robot. As in our previous model, the regression module we
+    design can be trained on small teams of 3 robots and generalize to
+    larger teams with no additional training. However, our new approach
+    greatly reduces estimator error, giving it the potential to greatly
+    reduce communication bandwidth in other localization schemes that
+    otherwise require continuous communication among robots.
 
-    We utilized a physical robotic system, \emph{Thymio}, to collect
-    datasets from $3$-robot and $5$-robot teams. Through empirical
-    experiments, we explained that in overall, the proposed machine
-    learning model offers more accurate estimation than other baselines.
-    In addition, our analysis on timestep-wise errors helped explore the
-    benefits from encoding historical behavior sequences as well as a
-    drawback of it. Lastly, we visualized prediction outcomes from a set
-    of samples to illustrate specific cases where the features from past
-    behaviors could also reduce the estimation error passed from
-    previous predictions for nearer robots.
+    To test our approach, we utilized a commercially available robotic
+    platform, \emph{Thymio}, to collect datasets from $3$-robot and
+    $5$-robot teams. Through empirical experiments, we showed that the
+    proposed machine learning model offers more accurate estimation than
+    other approaches. We analyzed our estimator performance over time
+    and demonstrated its improved performance for short horizons but
+    potential added liabilities for longer time horizons. Lastly, we
+    overlayed visualizations of the prediction outcomes on images of the
+    actual robotic system to illustrate specific cases where low
+    estimation error was provided for far-away robots despite high error
+    on more nearby robots.
 
     In the future work, we could more deeply investigate the factors in
     model accuracy such as the length of history or types of team
-    behavior that might favor the prediction scheme. Also, since the
+    behavior that might favor the prediction scheme. Also, because the
     LSTM layer is exposed to various evolutions of team shape during
     training, the vector representation of it may be examined to
-    characterize team states and finally detect abnormality of the whole
-    system.
+    characterize team states and ultimately detect large-scale
+    group-shape abnormalities that may be important to detect for
+    situational awareness. Beyond these approaches, we are currently
+    working toward Bayesian implementations that make better use of
+    uncertainty information from sensors and provide confidence
+    estimates for the position of each robot in the team. Such
+    approaches, when incorporated into a frameworks such as partially
+    observable Markov decision processes, could lead to approaches for
+    using actuation (as opposed to communication) to reduce estimator
+    error.
 
 {\small
 	\bibliographystyle{IEEEtran}
