@@ -30,7 +30,6 @@
 
 \graphicspath{{figures/}}
 
-
 \title{\LARGE \bf
 	Learning local behavioral sequences 
 	to better infer non-local properties in real multi-robot systems
@@ -297,13 +296,15 @@
 	
 	More formally, at the time instant $\tau$, the following set of poses of all teammates is 
 	available: 
-	
+
 	\begin{equation*}
-		\{\vec{p}_{r@t},\theta_{r@t}\} 
-		\label{eq:pose_set}
-	\end{equation*}
+		\{\vec{p}_{r@t},\theta_{r@t}\} \\	
+	\label{eq:pose_set}
+	\end{equation*}	
 	
-	where $r \in \{T, F_{1}, F_{2}, ..., F_{n-2}, H\}$ and $t \leq \tau$. 
+	where $\vec{p}_{r@t} \overset{\Delta}{=}(x_{r@t}, y_{r@t})$ is the position of robot~$r$
+	at time $t$ 
+	where  $r \in \{T, F_{1}, F_{2}, ..., F_{n-2}, H\}$ and $t \leq \tau$. 
 	
 	Also, at each time $t > \tau$, the position of $F_1$, $\vec{p}_{F_{1@t}}$ is observed.  
 	That is, the RTL problem is to use all the available information to predict 
@@ -351,9 +352,106 @@
 	In the next section, we discuss how to incorporate such a prediction strategy with 
 	the proposed model regressor in more technical details. 
 		
-	\subsection{Local behavior sequence learning in LSTM}
-	\label{sec:local_behavior_sequence_learning_in_lstm}
+		
+	\subsection{Deep learning}
+	\label{sec:deep_learning}
 	 
+	Previously, we used a series of fully-connected (FC) layers to only take the
+	observation input and estimate the position and orientation of interest: 
+	
+	\begin{equation}
+	Y = f(X_{obs})
+	\end{equation}
+	
+	\begin{flushleft}
+	where $f$ is a series of \emph{FC} layers, 
+	$X_{obs} = (\vec{p}_{F@t}, \theta_{F@t}, \vec{p}_{F@t+1})$, and
+	$Y = (\hat{\vec{p}}_{H@t}, \hat{\theta}_{F@t+1})$
+	\end{flushleft}
+	
+	As shown in Fig.~\ref{fig:DL_Pipeline}, however, our proposed model uses not only 
+	an observation input but also a historical sequence of poses. First of all, we 
+	use a slightly different observation encoding: 
+
+	\begin{equation}
+	o = f_{obs}(X_{obs})
+	\end{equation}
+
+	where $f_{obs}$ is a FC layer,
+		$X_{obs} = (\vec{p}_{F@t}, \vec{p}_{F@t+1})$, 
+		and $o \in \mathbb{R}^{k}$ is the encoded observation feature 
+		where $k$ is the size of FC layer. 
+		
+	A historical sequence of poses is encoded by a bidirectional LSTM layer: 
+
+	\begin{equation}
+	h = f_{hist}(X_{hist})
+	\end{equation}
+
+
+     where $f_{hist}$ is a LSTM layer,	
+		$X_{hist} = (\vec{p}_{H@t-m+1:t}, \theta_{H@t-m+1:t},
+		             \vec{p}_{F@t-m+1:t}, \theta_{F@t-m+1:t})$,		
+		and $h \in \mathbb{R}^{2 \times k}$ is the encoded history feature
+	where $m$ is the length of historical sequence, 
+	and $k$ is the size of LSTM layer. 
+
+	Then, $o$ and $h$ are synthesized by a layer $\phi$, which is 
+	passed as input to two separate final regressors, $g_{p}$ and $g_\theta$.  
+	
+	\begin{equation}
+	\begin{split}
+	Y_{p} = g_{p}(\phi(o, h)),\\
+	Y_{\theta}= g_{\theta}(\phi(o, h)) 
+	\end{split}
+	\end{equation}
+	
+	where 
+	$Y_{p} = \hat{\vec{p}}_{H@t}$ and
+	$Y_{\theta} = (\hat{\theta}_{F@t}, \hat{\theta}_{H@t}, \hat{\theta}_{F@t+1})$.
+	
+	
+	Previously, the following inputs were needed to 
+	predict the position of \emph{Head} at time $t$ given the team of 
+	\emph{H, F,} and \emph{T}: $\vec{p}_{F@t}$, $\theta_{F@t}$, and $\vec{p}_{F@t+1}$.
+	Then, $\theta_{F@t+1}$ was estimated using the prediction outcome on $\vec{p}_{H@t}$, 
+	additionally. Throughout such a process, using three separate vanilla neural network, 
+	one for each target value, was suggested, but running one model that can regress on the 
+	three values at the same time may work as well.
+	
+	Here, we propose a deep neural network model for regression, shown 
+	in Fig.~\ref{fig:DL_Pipeline}, to take advantage of not only the 
+	traditional types of input but also historical poses of the team.
+	
+	First, \emph{ObsEncFC} layer encodes the observation about the \emph{Follower} $\vec{p}_{F}$
+	
+	
+	where $X_o \in \mathbb{R}^{1 \times 4}$ and $X_h \in \mathbb{R}^{t \times 4}$
+	
+	\begin{equation}
+	Y_p = g_{p}(F_t)
+	\end{equation}
+
+	\begin{equation}
+	Y_\theta = g_{\theta}(F_t)
+	\end{equation}
+
+	
+	
+	\subsubsection{ObsEncFC}
+	This layer works 
+	
+	\subsubsection{HistEncLSTM}
+	e	
+		
+	\begin{itemize}
+		\item ObsEncFC
+		\item HistEncLSTM
+		\item FusionFC
+		\item PDecFC
+		\item ODecFC
+	\end{itemize}
+	
 	
 	
 	\section{Experiments} 
