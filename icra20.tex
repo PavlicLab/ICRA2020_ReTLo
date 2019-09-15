@@ -539,10 +539,18 @@
 	\subsection{Qualitative results} 
 	\label{sec:qualitative_results} 
 
-	Figure~\ref{fig:preds} displays both the true positions of all robots and the predictions on 
-	them for three different instances of $5$-robot team. As analyzed in Section\ref{sec:limitation}, 
-	the inference results appear reliable in this time frame.  
-	
+	Figure~\ref{fig:preds} displays three different instances of $5$-robot team
+	in which both the true positions of all robots and the predictions on them are represented. 
+	In overall, the predictions
+	until $4$~seconds are shown to be reliable, although there are some errors while the
+	group of robots is turning with a high angle and the \emph{Head} changes its destination. 
+	An observation is that the predictions tend to be located more inward the curve the team is moving on. 
+	Yet, even when the prediction for a nearer robot is away from the truth, the prediction 
+	for a farther robot appears correctly in some cases. 
+	Such a correction occurs probably because even if an observation input from a nearer robot was 
+	actually inaccurate, the past positions in input could alleviate the impact of it and still 
+	help generate a decent estimation result.
+
 
 	\section{Discussion \& Future work}
 	\label{sec:discussion_and_future_work}
