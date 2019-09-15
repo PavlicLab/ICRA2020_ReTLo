@@ -59,7 +59,7 @@
 
 		We propose a more powerful machine learning approach, as an extension of~\cite{CPR17},
 		to tackle the Remote Teammate
-		Localization (RTL) problem where a robot member in a multi-robot team is to predict positions
+		Localization~(RTL) problem where a robot member in a multi-robot team is to predict positions
 		of all other teammates only using the observations on its nearest neighbor without any
 		communication between robots.
 		%        In the previous work, we followed a realistic configuration
@@ -72,7 +72,7 @@
 		caging mission.
 		In this work, however, we focus mainly on 1) achieving better performance
 		to improve the applicability and 2) conducting evaluation in
-		more realistic environments. To be specific, we adopt a Long-Short Term Memory (LSTM)~\cite{HS97}
+		more realistic environments. To be specific, we adopt a Long-Short Term Memory~(LSTM)~\cite{HS97}
 		to learn possible evolution of behaviors in a modular team helping reduce the errors
 		from regression outcomes. Furthermore, while the previous work relied only on computer simulations,
 		all the experiments here are conducted on a physical two-wheeled robotic platform, \emph{Thymio},
@@ -369,7 +369,7 @@
 	we use absolute direction in this work because assuming robots equipped
 	with an instrument such as a electric compass is acceptable.
 
-	Previously, in~\cite{CPR17} we used a series of fully-connected (FC) layers
+	Previously, in~\cite{CPR17} we used a series of fully-connected~(FC) layers
 	to only take the observation input and estimate the position and orientation
 	of interest:
 
@@ -486,8 +486,8 @@
 	which a new command was received by each robot. Also, all pose data was
 	collected at the rate of $2$ frames per second,
 	which was not necessarily synchronized with the command timing.
-	We set the length of history to $5$~seconds ($10$~time steps in data recording) and
-	the time window for prediction to the next $8$~seconds ($16$~time steps).
+	We set the length of history to $5$~seconds~($10$~time steps in data recording) and
+	the time window for prediction to the next $8$~seconds~($16$~time steps).
 	Table~\ref{table:data_description} provides details about the collected data
 	where a sample refers to a set of coordinates and orientations in a subteam
 	with which a prediction can be performed, and an instance is set of all available samples for $13$ seconds from the entire team. We clustered recordings so that
@@ -580,7 +580,7 @@
 
 	In this section, we analyze the performance of the machine learning based models
 	in more fine-grained perspective. For each model, Fig.~\ref{fig:micro_eval} visualizes the
-	step-wise error for different target robots (\emph{Follower 2} and \emph{Head})
+	step-wise error for different target robots~(\emph{Follower 2} and \emph{Head})
 	in $5$-robot case, which is calculated by averaging the errors of each step across instances.
 	Such a way of evaluation can offer us a crucial insight to understand an approximate time frame
 	within which a level of average error could be ensured for a specific robot. During this
