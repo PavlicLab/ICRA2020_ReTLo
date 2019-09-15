@@ -70,7 +70,7 @@
 		caging mission.         
 		In this work, however, we focus mainly on 1) achieving better performance
 		to improve the applicability and 2) conducting evaluation in
-		more realistic environments. To be specific, we adopt a Long-Short Term Memory (LSTM)
+		more realistic environments. To be specific, we adopt a Long-Short Term Memory (LSTM) \cite{HS97}
 		to learn possible evolution of behaviors in a modular team helping reduce the errors
 		from regression outcomes. Furthermore, while the previous work relied only on computer simulations,
 		all the experiments here are conducted on a physical two-wheeled robotic platform, \emph{Thymio},
@@ -245,6 +245,9 @@
 	movements of the neighbor, which would likely contain noise to some level, while 
 	\emph{SE3-Nets} is provided with clear information about the applied force.  
 	
+	\subsection{Scalable teammate localization} 
+	\label{sec:scalable_teammate_localization}
+	
 	In our previous work \cite{CPR17}, the detailed configurations for RTL 
 	problem were first introduced with realistic assumptions. 
 	To solve the problem particularly with little robot-to-robot communication, 
@@ -311,7 +314,7 @@
 	\subsection{Scalable prediction} 
 	\label{sec:scalable_prediction}
 	
-	We refer to the inference scheme of our previous work \cite{CPR17} in which 
+	We refer to the fundamental inference scheme of our previous work \cite{CPR17} in which 
 	a regressor is trained in a modular subteam of $3$ robots, and when employed 
 	for a larger team, repetitive predictions are performed along with the series
 	of $3$-robot modular teams until reaching the prediction step for \emph{Head}. 
