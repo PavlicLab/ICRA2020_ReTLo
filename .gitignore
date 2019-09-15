@@ -6,3 +6,6 @@ IEEEtran_bst_HOWTO.pdf
 *.blg
 *.bbl
 *.dvi
+*.swp
+*.fdb_latexmk
+*.fls
