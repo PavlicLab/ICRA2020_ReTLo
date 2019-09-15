@@ -315,11 +315,12 @@
 %	sharing when entering some specific regions either for security or for saving on the
 %	communication cost.
 	
+	
 	\section{Method}
 	\label{sec:method}
 	
-	In this section, we introduce more details about our method. First, 
-	we briefly revisit the prediction approach, shown in \cite{CPR17}, 
+%	In this section, we introduce more details about our method. 
+	First, we briefly revisit the scalable prediction approach, shown in \cite{CPR17}, 
 	to train the model on a small team and to be able to produce predictions 
 	even on a larger team without additional training. 
 	Then, we present the regressor built for learning not only with observations on 
@@ -328,25 +329,28 @@
 
 	\subsection{Scalable prediction} 
 	\label{sec:scalable_prediction}
+		
+	The basic idea in \cite{CPR17} is that the \emph{Tail} uses all the available information 
+	such as the observation on its neighbor
+	at $t$ and $t+1$ to predict $\vec{p}_{H@t}$ of \emph{Head} in its subteam of $3$~robots, 
+	which is actually \emph{Follower~2} in the entire team. 
+	After twice applications of such a prediction until $t+2$, the prediction outputs, 
+	$\vec{p}_{H@t}$ and $\vec{p}_{H@t+1}$, enable 
+	to perform the same process in the subteam of the next $3$~robots, which are 
+	\emph{Follower~1, Follower~2}, and \emph{Follower~3}, as if \emph{Follower~1} and 
+	\emph{Follower~3} were \emph{Tail} and \emph{Head} in that subteam, respectively. 
 	
-	We refer to the fundamental inference scheme of our previous work \cite{CPR17}. 
-	The basic idea is the \emph{Tail} robot can observe positions of its neighbor, 
-	\emph{Follower~1}, at two time steps and use it to predict the position of 
-	\emph{Follower~2}. 
+	Since the inference is applied in each of subteam in a repetitive manner, 
+	a predictor can be trained only with a $3$-robot team and still be used for a larger 
+	size of team without additional training for it. However, the extension of 
+	modular prediction brings about a time delay in making a prediction for a far robot. 	
+	Specifically, a prediction for \emph{Head} in a subteam requires a series of at least 
+	$2$~observations on \emph{Follower}, and thus, the initial position of Robot~$i$ can be estimated 
+	at time $i$ where Robot~$i$ refers to the robot that is $i$ robots ahead of \emph{Tail}.
 	
-	 in which 
-	a regressor is trained in a modular subteam of $3$ robots to obtain predictions 
-	on poses of the members of the subteam. 
-	When employed for a larger team, a repetitive manner of prediction is performed 
-	along with the series of $3$-robot modular teams until finally reaching the prediction 
-	step for \emph{Head}. 
-	More specifically, given a robot team of size $n$, the \emph{Tail} robot 
-	is allowed to gain the position of \emph{Follower 1}, $\vec{p}_{F}$ every 
-	single time step. Once 
-	
-	\subsubsection{History, observation, and target}
-	
-	
+	In the next section, we discuss how to incorporate such a prediction strategy with 
+	the proposed model regressor in more technical details. 
+		
 	\subsection{Local behavior sequence learning in LSTM}
 	\label{sec:local_behavior_sequence_learning_in_lstm}
 	 
