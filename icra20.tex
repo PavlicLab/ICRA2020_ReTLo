@@ -56,28 +56,53 @@
 
 	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 	\begin{abstract}
-
-		We propose a more powerful machine learning approach, as an extension of~\cite{CPR17},
-		to tackle the Remote Teammate
-		Localization~(RTL) problem where a robot member in a multi-robot team is to predict positions
-		of all other teammates only using the observations on its nearest neighbor without any
-		communication between robots.
-		%        In the previous work, we followed a realistic configuration
-		%        in which each robot had a limited sensor radius
-		%        As each robot had a relatively simple motion rule with dependency on its nearest neighbors,
-		In the previous work, we showed feasibility of a scalable method by which
-		a predictor robot was trained in a modular 3-robot team but could extend the prediction
-		to a larger
-		team without additional training, also suggesting an application of such an inference in
-		caging mission.
-		In this work, however, we focus mainly on 1) achieving better performance
-		to improve the applicability and 2) conducting evaluation in
-		more realistic environments. To be specific, we adopt a Long-Short Term Memory~(LSTM)~\cite{HS97}
-		to learn possible evolution of behaviors in a modular team helping reduce the errors
-		from regression outcomes. Furthermore, while the previous work relied only on computer simulations,
-		all the experiments here are conducted on a physical two-wheeled robotic platform, \emph{Thymio},
-		to demonstrate the performance gain under realistic constraints.
-
+        When members of a multi-robot team follow regular motion
+        rules sensitive to robots and other environmental factors
+        within sensing range, the team itself may become an
+        informational fabric for gaining situational awareness without
+        explicit signalling among robots. In our previous
+        work~\cite{CPR17}, we used machine learning
+        to develop a scalable module, trained only on data from
+        3-robot teams, that could predict the positions of all
+        robots in larger multi-robot teams based only on observations of the
+        movement of a robot's nearest neighbor. Not only was this
+        approach scalable from 3-to-many robots, but it did not require
+        knowledge of the control laws of the robots under observation,
+        as would a traditional observer-based approach.
+        However, performance was only tested in
+        simulation and could only be a substitute for explicit
+        communication for short periods of time or in cases of very low
+        sensing noise. In this work, we apply more sophisticated machine
+        learning methods to data from a physically realized robotic team to
+        develop Remote Teammate Localization~(RTL) modules that can be
+        used in realistic environments. To be specific, we adopt
+        Long--Short-Term--Memory~(LSTM)~\cite{HS97} to learn the
+        evolution of behaviors in a modular team, which has the effect
+        of greatly reducing errors from regression outcomes. In contrast
+        with our previous work in simulation, all of the experiments
+        conducted in this work were conducted on the \emph{Thymio}
+        physical, two-wheeled robotic platform.
+        %As an extension of our previous work~\cite{CPR17}, we
+		%We propose a more powerful machine learning approach, as an extension of~\cite{CPR17},
+		%to tackle the Remote Teammate
+		%Localization~(RTL) problem where a robot member in a multi-robot team is to predict positions
+		%of all other teammates only using the observations on its nearest neighbor without any
+		%communication between robots.
+		%%        In the previous work, we followed a realistic configuration
+		%%        in which each robot had a limited sensor radius
+		%%        As each robot had a relatively simple motion rule with dependency on its nearest neighbors,
+		%In the previous work, we showed feasibility of a scalable method by which
+		%a predictor robot was trained in a modular 3-robot team but could extend the prediction
+		%to a larger
+		%team without additional training, also suggesting an application of such an inference in
+		%caging mission.
+		%In this work, however, we focus mainly on 1) achieving better performance
+		%to improve the applicability and 2) conducting evaluation in
+		%more realistic environments. To be specific, we adopt a Long-Short Term Memory~(LSTM)~\cite{HS97}
+		%to learn possible evolution of behaviors in a modular team helping reduce the errors
+		%from regression outcomes. Furthermore, while the previous work relied only on computer simulations,
+		%all the experiments here are conducted on a physical two-wheeled robotic platform, \emph{Thymio},
+		%to demonstrate the performance gain under realistic constraints.
 	\end{abstract}
 
 
