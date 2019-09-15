@@ -292,27 +292,28 @@
 	$\tau$, all the information about positions and orientations of all robots 
 	have been shared especially with the \emph{Tail} robot, 
 	possibly via global communication,
-	but from $\tau+1$, such information becomes no longer available causing a need of the
+	but from $\tau+1$, such data becomes no longer available causing a need of the
 	localization technique only utilizing local observations.	
-	This may simulate some realistic scenarios where 
-	an unexpected technical issue occurs at a time point disabling any robot-to-robot
-	data	transfer, or the robot team intentionally stops the information 
-	sharing when entering some specific regions either for security or for saving on the
-	communication cost.
 	
 	More formally, at the time instant $\tau$, the following set of poses of all teammates is 
 	available: 
 	
 	\begin{equation*}
 		\{\vec{p}_{r@t},\theta_{r@t}\} 
+		\label{eq:pose_set}
 	\end{equation*}
 	
 	where $r \in \{T, F_{1}, F_{2}, ..., F_{n-2}, H\}$ and $t \leq \tau$. 
 	
-	At each time $t > \tau$, the position of $F_1$, $\vec{p}_{F_{1@t}}$ is observed.  
-	Thus, the RTL problem is to use all the available information to predict 
-	the set of poses at $t' > \tau$. 
+	Also, at each time $t > \tau$, the position of $F_1$, $\vec{p}_{F_{1@t}}$ is observed.  
+	That is, the RTL problem is to use all the available information to predict 
+	the pose set above at $t' > \tau$. 
 	
+%	This may simulate some realistic scenarios where 
+%	an unexpected technical issue occurs at a time point disabling any robot-to-robot
+%	data	transfer, or the robot team intentionally stops the information 
+%	sharing when entering some specific regions either for security or for saving on the
+%	communication cost.
 	
 	\section{Method}
 	\label{sec:method}
