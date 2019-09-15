@@ -342,12 +342,13 @@
 	\emph{Follower~3} were \emph{Tail} and \emph{Head} in that subteam, respectively. 
 	
 	Since the inference is applied in each of subteam in a repetitive manner, 
-	a predictor can be trained only with a $3$-robot team and still be used for a larger 
+	a predictor can be trained simply with a $3$-robot team and still be used for a larger 
 	size of team without additional training for it. However, the extension of 
 	modular prediction brings about a time delay in making a prediction for a far robot. 	
 	Specifically, a prediction for \emph{Head} in a subteam requires a series of at least 
-	$2$~observations on \emph{Follower}, and thus, the initial position of Robot~$i$ can be estimated 
-	at time $i$ where Robot~$i$ refers to the robot that is $i$ robots ahead of \emph{Tail}.
+	$2$~observations on \emph{Follower}, and in other words, 
+	the initial position of robot~$i$ can be estimated at time $i$ for the first time 
+	where robot~$i$ refers to the robot that is $i$ robots ahead of \emph{Tail}.
 	
 	In the next section, we discuss how to incorporate such a prediction strategy with 
 	the proposed model regressor in more technical details. 
@@ -356,12 +357,18 @@
 	\subsection{Regression model}
 	\label{sec:regression_model}
 	
-	Because the learned regressor is designed to work in a subteam of $3$ robots, 
-	all the notations here for \emph{Head, Follower}, and \emph{Tail} all apply
-	only within that smaller group.
+	Because the learned regressor is designed to work in a modular team of $3$ robots, 
+	all the notations here for \emph{Head, Follower}, and \emph{Tail} only indicate
+	them. In addition, all positions noted here are assumed to be relative positions 
+	to the \emph{Tail} robot, since in practice, the \emph{Tail} has to understand 
+	positions of others by projection onto the local coordinate system centered 
+	at itself. Though a similar conversion may be considered for orientation, 
+	we use absolute direction in this work because assuming robots equipped 
+	with an instrument such as a electric compass is acceptable. 
 	 
-	Previously, we used a series of fully-connected (FC) layers to only take the
-	observation input and estimate the position and orientation of interest: 
+	Previously, in \cite{CPR17} we used a series of fully-connected (FC) layers 
+	to only take the observation input and estimate the position and orientation 
+	of interest: 
 	
 	\begin{equation}
 	Y = f(X_{obs})
