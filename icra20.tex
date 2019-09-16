@@ -176,13 +176,13 @@
 		\includegraphics[width=1.\columnwidth]{fig_DL_Pipeline}
 		\caption{Structure of our proposed deep neural network.
 			This is an snapshot example when applied to a focused module of
-			$3$~robots, called \emph{Tail, Follower, Head} within it, at time $t$.
+			$3$~robots, called \emph{Tail, Follower, Head} within it, at time $t+1$.
             The Encoder--Decoder structure encodes: 1) historical
             positions and orientations of \emph{Follower} and \emph{Head}
-            until $t-2$, and 2) the observed positions of the \emph{Follower} at
-            $t-1$ and $t$. The decoder part learns to estimate: 1) the
-            position of \emph{Head} at $t-1$, and 2) orientations of
-            \emph{Follower} at $t-1$ and $t$ and \emph{Head} at $t-1$.
+            until $t-1$, and 2) the observed positions of the \emph{Follower} at
+            $t$ and $t+1$. The decoder part learns to estimate: 1) the
+            position of \emph{Head} at $t$, and 2) orientations of
+            \emph{Follower} at $t$ and $t+1$ and \emph{Head} at $t$.
 		}
 		\label{fig:DL_Pipeline}
 	\end{figure}
