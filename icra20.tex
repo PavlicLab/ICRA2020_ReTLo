@@ -150,7 +150,7 @@
 	Figure~\ref{fig:Concept} illustrates our proposed pipeline in which
 	a deep neural network is to learn to synthesize the observations of its neighbor
 	with knowledge about historical positions of all the teammates.
-	As shown in Fig.~\ref{fig:DL_Pipeline}, an LSTM layer is deployed to encode
+	As shown in Fig.~\ref{fig:DL_Pipeline}, a LSTM layer is deployed to encode
     the historical sequence input, which could learn robot dynamics and
     the probable evolution of the team shape over time under physical
     constraints. Furthermore, the learned sequence encoding could help
@@ -245,7 +245,7 @@
 	\subsection{Group state recognition}
 	\label{sec:group_state_recognition}
 
-    The RTL problem aims to infers the positional state of an entire
+    The RTL problem aims to infer the positional state of an entire
     multi-robot team using only locally obtainable information in the
     aspect of a robot member. This is because the knowledge about global
     configuration could help make a better decision for the sake of
@@ -341,7 +341,7 @@
     to always keep the neighbors within their sensory range.
 
     The RTL is to localize all teammates from the view of \emph{Tail}
-    only using locally observable information of the position position
+    only using locally observable information of the position
     of \emph{Follower}~$1$ at every time step. We assume that until a
     specific time instant $\tau$, all the information about positions
     and orientations of all robots have been shared reliably with the
@@ -364,7 +364,7 @@
     H\}$ and $t \leq \tau$. The RTL problem is thus, at each time $t >
     \tau$, to observe the position of $F_1$, $\vec{p}_{F_{1@t}}$, and
     use all available information to predict the pose set in
-    Eq.~\eqref{eq:pose_set} for time $t' > t > \tau$.
+    Eq.~\eqref{eq:pose_set} for time $t'$ where $ \tau < t' \leq t$.
 
 %	This may simulate some realistic scenarios where
 %	an unexpected technical issue occurs at a time point disabling any robot-to-robot
@@ -419,7 +419,7 @@
     of $3$ robots, notations for robot~$r \in \{H, F, T\}$ only indicate
     the identities of \emph{Head}, \emph{Follower}, and \emph{Tail} and
     not any additional intermediate \emph{Follower} robots. In addition,
-    all positions noted here are assumed to be in expressed in the
+    all positions noted here are assumed to be expressed in the
     reference frame of the \emph{Tail} robot because, in practice, the
     \emph{Tail} has to understand positions of others by projection onto
     the local coordinate system centered at itself. Though a similar
@@ -454,8 +454,8 @@
             \end{equation}
             %
             where $f_{hist}$ is a LSTM layer, $X_{hist} =
-            (\vec{p}_{H@t-\ell+1:t}, \theta_{H@t-\ell+1:t},
-            \vec{p}_{F@t-\ell+1:t}, \theta_{F@t-\ell+1:t})$, and $h \in
+            (\vec{p}_{H@t-\ell:t-1}, \theta_{H@t-\ell:t-1},
+            \vec{p}_{F@t-\ell:t-1}, \theta_{F@t-\ell:t-1})$, and $h \in
             \mathbb{R}^{2 \times m}$ is the encoded history feature
             where $\ell$ is the length of historical sequence, and $m$ is
             the size of LSTM layer.
@@ -754,7 +754,7 @@
     working toward Bayesian implementations that make better use of
     uncertainty information from sensors and provide confidence
     estimates for the position of each robot in the team. Such
-    approaches, when incorporated into a frameworks such as partially
+    approaches, when incorporated into a framework such as partially
     observable Markov decision processes, could lead to approaches for
     using actuation (as opposed to communication) to reduce estimator
     error.
