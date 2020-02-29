@@ -549,13 +549,11 @@
     overlaid on the physical arena and also operate an array of 
     memory $M$ maintaining indices of the "two" cells most recently 
     visited by the Head, with the latest at $M[0]$ and the earlier 
-    at $M[1]$.     
-    As the Head has reached its destination, for calculating the next 
-    waypoint, $\Psi$ first determines candidate cells $c_i$ such 
-    that $i~\notin~M$ and
-    $A(M[0],i)=1$ where $A(j,k)$ is the adjacent 
-    matrix of $G$ returning either $1$ if $c_j$ and $c_k$ are adjacent 
-    geographically or $0$ otherwise. 
+    at $M[1]$. Immediately after the Head has reached its destination, 
+    for calculating the next waypoint, $\Psi$ first determines candidate
+    cells $c_i$ such that $i~\notin~M$ and $A(M[0],i)=1$ where $A(j,k)$ is
+    the adjacent matrix of $G$ returning either $1$ if $c_j$ and $c_k$ are
+    adjacent geographically or $0$ otherwise. 
     Then, a random coordinate is drawn as the next destination by uniform
     distribution across all the regions of the candidate cells, 
     as shown as red points ahead of the moving team in Fig.~\ref{fig:preds}. 
