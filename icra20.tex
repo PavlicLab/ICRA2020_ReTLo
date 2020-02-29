@@ -74,7 +74,7 @@
         communication for short periods of time or in cases of very low
         sensing noise. In this work, we apply more sophisticated machine
         learning methods to data from a physically realized robotic team to
-        develop Remote Teammate Localization~(RTL) modules that can be
+        develop Remote Teammate Localization~(ReTLo) modules that can be
         used in realistic environments. To be specific, we adopt
         Long--Short-Term--Memory~(LSTM)~\cite{HS97} to learn the
         evolution of behaviors in a modular team, which has the effect
@@ -85,7 +85,7 @@
         %As an extension of our previous work~\cite{CPR17}, we
 		%We propose a more powerful machine learning approach, as an extension of~\cite{CPR17},
 		%to tackle the Remote Teammate
-		%Localization~(RTL) problem where a robot member in a multi-robot team is to predict positions
+		%Localization~(ReTLo) problem where a robot member in a multi-robot team is to predict positions
 		%of all other teammates only using the observations on its nearest neighbor without any
 		%communication between robots.
 		%%        In the previous work, we followed a realistic configuration
@@ -130,7 +130,7 @@
     work together to appropriately move the collective~\cite{CPR17}.
 
     In our previous work~\cite{CPR17}, we used a machine-learning method
-    to solve the RTL problem where a robot~(\emph{Tail}) at one end of a
+    to solve the ReTLo problem where a robot~(\emph{Tail}) at one end of a
     line formation of a multi-robot team is to predict positions of all
     other teammates only using local observations about a single nearby
     teammate. Because each robot has a limited sensor radius and a
@@ -200,7 +200,7 @@
     This paper is organized as follows. In
     Section~\ref{sec:related_work}, we explore related literature and
     the distinction of our work. Section~\ref{sec:rtl_problem} explains
-    more details about our setting of RTL problem. Then, we introduce
+    more details about our setting of ReTLo problem. Then, we introduce
     our proposed deep-learning solution method in
     Section~\ref{sec:method}. In Section~\ref{sec:experiments}, we
     provide details about experiments performed on real robots,
@@ -220,32 +220,32 @@
 
     \subsection{Cooperative localization and tracking}
 
-    Although the RTL problem is superficially similar to other known
+    Although the ReTLo problem is superficially similar to other known
     cooperative localization and tracking problems~\cite{GKD04, LSRB16,
     FSDO10, CX14, DMG15}, such as cooperative SLAM, it is a distinct
-    from general robotic localization. In RTL, the robot does not
+    from general robotic localization. In ReTLo, the robot does not
     execute predictions on its own location but on its teammates using
     accessible information. Moreover, in contrast with cooperative
-    localization approaches, robots in RTL are assumed to be
+    localization approaches, robots in ReTLo are assumed to be
     communication free and thus not allowed to communicate with other
     members during the prediction of positions. Hence, in lieu of direct
-    signalling, an underlying assumption of the RTL problem is that the
+    signalling, an underlying assumption of the ReTLo problem is that the
     robot behaviors are correlated with the state of the environment
     around them and thus contain cues about the state of their
     neighbors. In this sense, state observers in a networked robotic
-    system are more similar to RTL than robotic
-    localization~\cite{XNX10, GACM12}, but RTL does not depend upon
+    system are more similar to ReTLo than robotic
+    localization~\cite{XNX10, GACM12}, but ReTLo does not depend upon
     knowledge of the structure of the underlying robotic controllers and
     does not require that robots move according to simplistic,
     analytically tractable dynamical models. Furthermore, we emphasize
-    RTL solutions focused on scaling from training with small teams to
+    ReTLo solutions focused on scaling from training with small teams to
     implementation in potentially much larger and possibly variably
     sized teams.
 
 	\subsection{Group state recognition}
 	\label{sec:group_state_recognition}
 
-    The RTL problem aims to infer the positional state of an entire
+    The ReTLo problem aims to infer the positional state of an entire
     multi-robot team using only locally obtainable information in the
     aspect of a robot member. This is because the knowledge about global
     configuration could help make a better decision for the sake of
@@ -262,7 +262,7 @@
 	\subsection{Behavioral cue interpretation}
 	\label{sec:behavioral_cue_interpretation}
 
-    In the RTL problem, the pose of remote robots is to be inferred from
+    In the ReTLo problem, the pose of remote robots is to be inferred from
     the motions of nearby robots performing otherwise nominal behaviors.
     This approach allows information to flow around a multi-robot team
     without traditional communication modalities for explicit
@@ -285,7 +285,7 @@
     well as knowledge of a force acting on an object within the frame.
     One of the motivations for this work was to understand the dynamics
     of robotic arms and the relationship with control commands possibly
-    executed. In the RTL problem described in Section~\ref{sec:intro},
+    executed. In the ReTLo problem described in Section~\ref{sec:intro},
     the \emph{Tail} robot may have accumulated a global shape of robot
     team over time, and it has to be able to predict the future
     formation as a new observation on its neighbor is provided, which
@@ -302,7 +302,7 @@
 	\subsection{Contribution beyond past work}
 	\label{sec:scalable_teammate_localization}
 
-    We first presented the RTL problem in our previous
+    We first presented the ReTLo problem in our previous
     work~\cite{CPR17}. To solve the problem with little robot-to-robot
     communication, the \emph{Tail} robot is designed to use a repetitive
     strategy of inference with which the predictions on a closer robot
@@ -315,7 +315,7 @@
     robotic teams using commercially available, off-the-shelf robotic
     platforms.
 
-	\section{RTL Problem \& System Design}
+	\section{ReTLo Problem \& System Design}
 	\label{sec:rtl_problem}
 
     Here, we build on the problem and approach we introduced in our previous
@@ -340,7 +340,7 @@
     we assume that every robot has an ability to accelerate fast enough
     to always keep the neighbors within their sensory range.
 
-    The RTL is to localize all teammates from the view of \emph{Tail}
+    The ReTLo is to localize all teammates from the view of \emph{Tail}
     only using locally observable information of the position
     of \emph{Follower}~$1$ at every time step. We assume that until a
     specific time instant $\tau$, all the information about positions
@@ -361,7 +361,7 @@
     where $\vec{p}_{r@t} \triangleq (x_{r@t}, y_{r@t})$ is the position
     of robot~$r$ at time~$t$ and $\theta_{r@t}$ is the orientation of
     robot~$r$ at time $t$, with $r \in \{T, F_{1}, F_{2}, ..., F_{n-2},
-    H\}$ and $t \leq \tau$. The RTL problem is thus, at each time $t >
+    H\}$ and $t \leq \tau$. The ReTLo problem is thus, at each time $t >
     \tau$, to observe the position of $F_1$, $\vec{p}_{F_{1@t}}$, and
     use all available information to predict the pose set in
     Eq.~\eqref{eq:pose_set} for time $t'$ where $ \tau < t' \leq t$.
@@ -385,7 +385,7 @@
     \subsection{Scalable, modular prediction approach}
 	\label{sec:scalable_prediction}
 
-    The scalable RTL implementation we previously
+    The scalable ReTLo implementation we previously
     introduced~\cite{CPR17} iteratively applies predictions of farther
     and farther robots within focal 3-robot teams, starting with the
     nearest \emph{Follower} robots and eventually leading to prediction
@@ -428,7 +428,7 @@
     compass directions) for simplicity.
 
     In this work, we use a significantly different deep neural network
-    architecture than our previous RTL work~\cite{CPR17}. As shown in
+    architecture than our previous ReTLo work~\cite{CPR17}. As shown in
     Fig.~\ref{fig:DL_Pipeline}, our proposed model uses not only the
     current observation of the follower as an input but also a
     historical sequence of poses. We deconstruct the architecture here.
@@ -543,8 +543,8 @@
     autocorrelation to help ensure independence of instances, we
     clustered recordings so that instances are separated by at least
     $7$~seconds. All the collected data is open to the 
-    public\footnote{https://github.com/ctyeong/rtl-lstm}
-    to encourage more future works on RTL.
+    public\footnote{https://github.com/ctyeong/ReTLo}
+    to encourage more future works on ReTLo.
     %
 	\setlength{\tabcolsep}{0.5em} % for the horizontal padding
 	{\renewcommand{\arraystretch}{1.2}% for the vertical padding
