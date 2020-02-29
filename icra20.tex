@@ -349,11 +349,10 @@
     with the \emph{Tail} robot, possibly via global communication, albeit
     continued information sharing is unavailable after time $\tau$ thus
     requiring \emph{Tail} to use this localization technique to extrapolate
-    from the previously known reliable positions. One can treat our previous
-    scenario in \cite{CPR17} as a special case in which  after $\tau$, 
-    the \emph{Tail} does not utilize historical information of 
-    its teammates and only relies on transient observations of 
-    \emph{Follower}~1.
+    from the previously known reliable positions. One may treat the
+    scenario in \cite{CPR17} as a special case in which after $\tau$, 
+    the \emph{Tail} uses very limited information from history, only 
+    orientations of teammates at $\tau$. 
 
     Formally, at the time instant $\tau$, the following set of poses of
     all teammates is available:
@@ -543,28 +542,26 @@
        
 %    First, the Head robot is initiailized to a random location followed by N-1 robots with roughly a distance of OO cm between neighbors and their random orientations.
     
-    We designed a central trajectory planner $\Psi$, which draws random 
-    waypoints for \emph{Head} to generate highly arbitrary poses
-    of the robot team without frequent human intervention.         
-%    which draws a random
-%    destination for Head when the robot has reached the previous
-%    destination so that the team of robots can provide 
-    $\Psi$ is essentially set to simulate a virtual rectangular grid $G$ 
-    of "$36 \times 36$" cells, denoted as $c_1, c_2, ..., c_{36}$, 
-    overlaid on the physical arena and also operate an array of 
-    memory $M$ maintaining indices of the "two" cells most recently 
-    visited by the \emph{Head}, with the latest at $M[0]$ and the earlier 
-    at $M[1]$. Immediately after the \emph{Head} has reached its destination, 
-    for calculating the next waypoint, $\Psi$ first determines candidate
-    cells $c_i$ such that $i~\notin~M$ and $A(M[0],i)=1$ where $A(j,k)$ is
-    the adjacent matrix of $G$ returning either $1$ if $c_j$ and $c_k$ are
-    adjacent geographically or $0$ otherwise. 
+    We designed a central trajectory planner $\Psi$ to generate highly 
+    arbitrary poses of the robot team without frequent human intervention.
+    $\Psi$ essentially provides random waypoints to the \emph{Head} robot simulating a virtual 
+    rectangular grid $G$ of $12 \times 8$~cells overlaid on the physical arena,  
+    denoted as $c_1, c_2, ..., c_{96}$ where each cell is networked with 
+    other neighboring cells in $8$~directions. 
+    $\Psi$ particularly operates an array of memory $M$ to maintain indices of 
+    the two cells most recently visited by the \emph{Head} 
+    (i.e., the latest at $M[0]$ and the earlier at $M[1]$). 
+    Immediately after the \emph{Head} has reached its destination, 
+    for calculating the next waypoint, $\Psi$ first determines a set of candidate
+    cells $C = \{c_i \mid A(M[0],i) \wedge \neg A(M[1],i) \wedge i~\neq~M[1] \}$ 
+	where $A(j,k)$ is the function returning either $True$ if $c_j$ 
+	and $c_k$ are adjacent or $False$ otherwise. 
     Then, a random coordinate is drawn as the next destination by uniform
-    distribution across all the regions of the candidate cells, 
+    distribution across all the regions lying in $C$, 
     as shown as red points ahead of the moving team in Fig.~\ref{fig:preds}. 
-    As a result, with the wheel speeds in our implementation, 
-    the \emph{Head} robot appeared to trigger $3$~times of destination 
-    change roughly during the inference time period of $8$~seconds.
+    With the wheel speeds in our implementation, 
+    the \emph{Head} robot appeared to trigger roughly $3$~times of destination 
+    change during the inference time period of $8$~seconds.
     
     Table~\ref{table:data_description} provides details about the
     collected data, where a \emph{Sample} refers to a set of coordinates and
@@ -707,8 +704,27 @@
     demonstrate the potential of our approach to reduce the
     communication bandwidth necessary for a multi-robot team to perform
     localization.
-
-	\subsection{Qualitative results}
+    
+    %
+    \begin{figure*}[t]
+    	\centering
+    	\includegraphics[width=2.\columnwidth]{fig_preds}
+    	\caption{Sample video frames with prediction results of our proposed model
+    		for three different instances of $5$~robot team.
+    		Each row presents four frames of an instance for first $4$~seconds.
+    		The yellow robot is \emph{Tail}, the pink is \emph{Head}, and
+    		in-between are \emph{Follower} robots.
+    		The colored circles are predicted position outputs, in each
+    		of which a black arrow is drawn to indicate the predicted orientation as well.
+    		The colored triangles with a black line through the center are the
+    		results of localization detection used in data collection stage.
+    		A small red dot on the arena in each frame is the random destination the
+    		\emph{Head} is moving toward, which is re-sampled at intervals.
+    	}
+    	\label{fig:preds}
+    \end{figure*}
+    %
+   	\subsection{Qualitative results}
 	\label{sec:qualitative_results}
 
     Figure~\ref{fig:preds} shows images of three different instances of
@@ -718,25 +734,7 @@
     \emph{Tail} and the red triangle is the \emph{Head}. The circles
     indicate the estimated positions of the two farthest \emph{Follower}
     robots as well as the \emph{Head}.
-    %
-	\begin{figure*}[t]
-		\centering
-		\includegraphics[width=2.\columnwidth]{fig_preds}
-		\caption{Sample video frames with prediction results of our proposed model
-			for three different instances of $5$~robot team.
-			Each row presents four frames of an instance for first $4$~seconds.
-			The yellow robot is \emph{Tail}, the pink is \emph{Head}, and
-			in-between are \emph{Follower} robots.
-			The colored circles are predicted position outputs, in each
-			of which a black arrow is drawn to indicate the predicted orientation as well.
-			The colored triangles with a black line through the center are the
-			results of localization detection used in data collection stage.
-			A small red dot on the arena in each frame is the random destination the
-			\emph{Head} is moving toward, which is re-sampled at intervals.
-		}
-		\label{fig:preds}
-	\end{figure*}
-    %
+
     Predictions until $4$~seconds are shown to be
     reliable, although there are some errors while the group of robots
     is turning with a high angle and when the \emph{Head} changes its
