@@ -544,7 +544,7 @@
 %    First, the Head robot is initiailized to a random location followed by N-1 robots with roughly a distance of OO cm between neighbors and their random orientations.
     
     We designed a central trajectory planner $\Psi$, which draws random 
-    waypoints for Head to generate highly arbitrary poses
+    waypoints for \emph{Head} to generate highly arbitrary poses
     of the robot team without frequent human intervention.         
 %    which draws a random
 %    destination for Head when the robot has reached the previous
@@ -553,8 +553,8 @@
     of "$36 \times 36$" cells, denoted as $c_1, c_2, ..., c_{36}$, 
     overlaid on the physical arena and also operate an array of 
     memory $M$ maintaining indices of the "two" cells most recently 
-    visited by the Head, with the latest at $M[0]$ and the earlier 
-    at $M[1]$. Immediately after the Head has reached its destination, 
+    visited by the \emph{Head}, with the latest at $M[0]$ and the earlier 
+    at $M[1]$. Immediately after the \emph{Head} has reached its destination, 
     for calculating the next waypoint, $\Psi$ first determines candidate
     cells $c_i$ such that $i~\notin~M$ and $A(M[0],i)=1$ where $A(j,k)$ is
     the adjacent matrix of $G$ returning either $1$ if $c_j$ and $c_k$ are
@@ -563,8 +563,8 @@
     distribution across all the regions of the candidate cells, 
     as shown as red points ahead of the moving team in Fig.~\ref{fig:preds}. 
     As a result, with the wheel speeds in our implementation, 
-    the Head robot appeared to trigger $3$~times of destination change
-    roughly during the inference time period of $8$~seconds.
+    the \emph{Head} robot appeared to trigger $3$~times of destination 
+    change roughly during the inference time period of $8$~seconds.
     
     Table~\ref{table:data_description} provides details about the
     collected data, where a \emph{Sample} refers to a set of coordinates and
