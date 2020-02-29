@@ -342,13 +342,18 @@
 
     The ReTLo is to localize all teammates from the view of \emph{Tail}
     only using locally observable information of the position
-    of \emph{Follower}~$1$ at every time step. We assume that until a
-    specific time instant $\tau$, all the information about positions
-    and orientations of all robots have been shared reliably with the
-    \emph{Tail} robot, possibly via global communication, but continued
-    information sharing is unavailable after time $\tau$ thus requiring
-    \emph{Tail} to use this localization technique to extrapolate from
-    the previously known reliable positions.
+    of \emph{Follower}~$1$ at every time step. Here, we introduce a 
+    more generalized version of ReTLo than in \cite{CPR17} by assuming 
+    that until a specific time instant $\tau$, all the information about
+    positions and orientations of all robots have been shared reliably 
+    with the \emph{Tail} robot, possibly via global communication, albeit
+    continued information sharing is unavailable after time $\tau$ thus
+    requiring \emph{Tail} to use this localization technique to extrapolate
+    from the previously known reliable positions. One can treat our previous
+    scenario in \cite{CPR17} as a special case in which  after $\tau$, 
+    the \emph{Tail} does not utilize historical information of 
+    its teammates and only relies on transient observations of 
+    \emph{Follower}~1.
 
     Formally, at the time instant $\tau$, the following set of poses of
     all teammates is available:
