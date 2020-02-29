@@ -177,11 +177,11 @@
 		\caption{Structure of our proposed deep neural network.
 			This is an snapshot example when applied to a focused module of
 			$3$~robots, called \emph{Tail, Follower, Head} within it, at time $t+1$.
-            The Encoder--Decoder structure encodes: 1) historical
+            The Encoder--Decoder structure encodes: 1)~historical
             positions and orientations of \emph{Follower} and \emph{Head}
-            until $t-1$, and 2) the observed positions of the \emph{Follower} at
-            $t$ and $t+1$. The decoder part learns to estimate: 1) the
-            position of \emph{Head} at $t$, and 2) orientations of
+            until $t-1$, and 2)~the observed positions of the \emph{Follower} at
+            $t$ and $t+1$. The decoder part learns to estimate: 1)~the
+            position of \emph{Head} at $t$, and 2)~orientations of
             \emph{Follower} at $t$ and $t+1$ and \emph{Head} at $t$.
 		}
 		\label{fig:DL_Pipeline}
@@ -542,31 +542,32 @@
        
 %    First, the Head robot is initiailized to a random location followed by N-1 robots with roughly a distance of OO cm between neighbors and their random orientations.
     
-    We designed a central trajectory planner $\Psi$ to generate highly 
+    We also designed a central trajectory planner $\Psi$ to generate highly 
     arbitrary poses of the robot team without frequent human intervention.
     $\Psi$ essentially provides random waypoints to the \emph{Head} robot simulating a virtual 
     rectangular grid $G$ of $12 \times 8$~cells overlaid on the physical arena,  
-    denoted as $c_1, c_2, ..., c_{96}$ where each cell is networked with 
-    other neighboring cells in $8$~directions. 
+    denoted as $c_1, c_2, ..., c_{96}$ where each cell is considered to be networked 
+    with other neighboring cells in $8$~directions. 
     $\Psi$ particularly operates an array of memory $M$ to maintain indices of 
     the two cells most recently visited by the \emph{Head} 
     (i.e., the latest at $M[0]$ and the earlier at $M[1]$). 
     Immediately after the \emph{Head} has reached its destination, 
     for calculating the next waypoint, $\Psi$ first determines a set of candidate
     cells $C = \{c_i \mid A(M[0],i) \wedge \neg A(M[1],i) \wedge i~\neq~M[1] \}$ 
-	where $A(j,k)$ is the function returning either $True$ if $c_j$ 
-	and $c_k$ are adjacent or $False$ otherwise. 
-    Then, a random coordinate is drawn as the next destination by uniform
+	where $A(a,b)$ is the function returning either $True$ if $c_a$ 
+	and $c_b$ are adjacent in $G$ or $False$ otherwise. 
+    Then, a random coordinate is eventually drawn as the next destination by uniform
     distribution across all the regions lying in $C$, 
-    as shown as red points ahead of the moving team in Fig.~\ref{fig:preds}. 
+    as shown as red points ahead of the moving team in Fig.~\ref{fig:preds} and 
+    a supplementary video. 
     With the wheel speeds in our implementation, 
-    the \emph{Head} robot appeared to trigger roughly $3$~times of destination 
+    the \emph{Head} robot appeared to trigger roughly $2$ to $3$~times of destination 
     change during the inference time period of $8$~seconds.
     
     Table~\ref{table:data_description} provides details about the
     collected data, where a \emph{Sample} refers to a set of coordinates and
     orientations in a 3-robot group with which a prediction can be
-    performed, and an \emph{Instance} is set of all available samples
+    performed, and an \emph{Instance} is a set of all available samples
     for $13$~seconds from the entire team. To reduce temporal
     autocorrelation to help ensure independence of instances, we
     clustered recordings so that instances are separated by at least
@@ -599,7 +600,7 @@
     team is used to train our model, and another $10\%$ was set aside
     for validation. At each epoch of training, a validation followed so
     that the learned weights that achieved the best validation
-    performance were saved. The rest of $20\%$ data and all the data
+    performance were saved. The rest of $30\%$ data and all the data
     from $5$-robot were used to test the model. We compare our proposed
     model to two different alternative approaches:
     %
@@ -657,7 +658,39 @@
     overall result proves the effectiveness of encoding a sequence of
     historical behaviors as a feature input over the model fed only with
     very recent observation.
-
+    %
+    \begin{figure}[t]
+    	\centering
+    	\includegraphics[width=1.\columnwidth]{fig_micro_eval}
+    	\caption{Average step-wise error for different target robots in $5$-robot team.
+    		For each model, all the prediction errors at different time steps are averaged
+    		for a specific robot. The error bars represent the standard deviation of
+    		$5$~separate models in terms of the performance metric. For the sake of
+    		visualization, the error for \emph{Follower~3} is omitted, but note that
+    		in any model, the error ranges between the two visualized errors at every step.
+    	}
+    	\label{fig:micro_eval}
+    \end{figure}
+	%
+	%
+	\begin{figure*}[t]
+		\centering
+		\includegraphics[width=2.\columnwidth]{fig_preds}
+		\caption{Sample video frames with prediction results of our proposed model
+			for three different instances of $5$~robot team.
+			Each row presents four frames of an instance for first $4$~seconds.
+			The yellow robot is \emph{Tail}, the pink is \emph{Head}, and
+			in-between are \emph{Follower} robots.
+			The colored circles are predicted position outputs, in each
+			of which a black arrow is drawn to indicate the predicted orientation as well.
+			The colored triangles with a black line through the center are the
+			results of localization detection used in data collection stage.
+			A small red dot on the arena in each frame is the random destination the
+			\emph{Head} is moving toward, which is re-sampled at intervals.
+		}
+		\label{fig:preds}
+	\end{figure*}
+	%
 	\subsection{Microscopic analysis}
 	\label{sec:microscopic_analysis}
 
@@ -671,19 +704,6 @@
     acceptable error level. During this evaluation, we also had
     $5$~separate training sessions to gain the mean and the variability
     of the performance.
-    %
-	\begin{figure}[t]
-		\centering
-		\includegraphics[width=1.\columnwidth]{fig_micro_eval}
-		\caption{Average step-wise error for different target robots in $5$-robot team.
-			For each model, all the prediction errors at different time steps are averaged
-			for a specific robot. The error bars represent the standard deviation of
-			$5$~separate models in terms of the performance metric. For the sake of
-			visualization, the error for \emph{Follower~3} is omitted, but note that
-			in any model, the error ranges between the two visualized errors at every step.
-		}
-		\label{fig:micro_eval}
-	\end{figure}
 
     Figure~\ref{fig:micro_eval} shows that for any target robot, the
     error increases over time due to the design of the repetitive
@@ -704,26 +724,7 @@
     demonstrate the potential of our approach to reduce the
     communication bandwidth necessary for a multi-robot team to perform
     localization.
-    
-    %
-    \begin{figure*}[t]
-    	\centering
-    	\includegraphics[width=2.\columnwidth]{fig_preds}
-    	\caption{Sample video frames with prediction results of our proposed model
-    		for three different instances of $5$~robot team.
-    		Each row presents four frames of an instance for first $4$~seconds.
-    		The yellow robot is \emph{Tail}, the pink is \emph{Head}, and
-    		in-between are \emph{Follower} robots.
-    		The colored circles are predicted position outputs, in each
-    		of which a black arrow is drawn to indicate the predicted orientation as well.
-    		The colored triangles with a black line through the center are the
-    		results of localization detection used in data collection stage.
-    		A small red dot on the arena in each frame is the random destination the
-    		\emph{Head} is moving toward, which is re-sampled at intervals.
-    	}
-    	\label{fig:preds}
-    \end{figure*}
-    %
+        
    	\subsection{Qualitative results}
 	\label{sec:qualitative_results}
 
@@ -781,7 +782,8 @@
     training, the vector representation of it may be examined to
     characterize team states and ultimately detect large-scale
     group-shape abnormalities that may be important to detect for
-    situational awareness. Beyond these approaches, we are currently
+    situational awareness. 
+    Beyond these approaches, we are currently
     working toward Bayesian implementations that make better use of
     uncertainty information from sensors and provide confidence
     estimates for the position of each robot in the team. Such
