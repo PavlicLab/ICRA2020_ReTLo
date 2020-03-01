@@ -1,5 +1,5 @@
 * Description:
-This video visualizes the motivation, experimental settings, data collection, and prediction outcomes with physical robotic platform, Thymio II.
+This video visualizes the motivation, experimental settings, data collection, and prediction outcomes with a physical robotic platform, Thymio II.
 
 *Player Information:
 This video was tested with Windows Media Player 12 on Windows 10.
