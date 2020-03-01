@@ -25,7 +25,7 @@
 \usepackage{graphicx}
 \usepackage{caption}
 \usepackage{amsmath}
-\usepackage{hyperref}
+%\usepackage{hyperref}
 \DeclareCaptionFont{eightpt}{\fontsize{8pt}{9pt}\selectfont #1}
 \captionsetup{font=eightpt}
 \graphicspath{{figures/}}
@@ -494,7 +494,7 @@
             step. Although our model keeps the later estimate only, we
             discovered that involving it in both steps can regulate the
             regressor during learning to produce a model that achieves a
-            better score in validation.
+            better validation score.
 
     \end{itemize}
     %
@@ -528,22 +528,7 @@
     frequency oscillations in individual robot motion. Additional
     details about the physical constraints of the laboratory testbed are
     provided in a supplementary video.
-	 %
-	\setlength{\tabcolsep}{0.5em} % for the horizontal padding
-	{\renewcommand{\arraystretch}{1.2}% for the vertical padding
-		\begin{table}[t]
-			\centering
-			\begin{tabular}{|c|c|c|c|c|}
-				\hline
-				&  Duration & Num. of Samples & Num. of Instances  \\ \hline
-				$3$ robots & $100.6$ minutes & $6,975$ & $465$  \\ \hline
-				$5$ robots & $45.0$ minutes  & $8,736$ & $208$  \\ \hline
-			\end{tabular}
-			\caption{Description of data collected from executions of $3$-robot and $5$-robot teams.}
-			\label{table:data_description}
-		\end{table}
-	}
-	%
+	
     \subsection{Data collection}
 
     We collected the pose data from two robot teams, one of
@@ -556,8 +541,22 @@
     $5$~seconds~($10$~time steps in data recording) and the time window
     for prediction to the next $8$~seconds~($16$~time steps).
        
-%    First, the Head robot is initiailized to a random location followed by N-1 robots with roughly a distance of OO cm between neighbors and their random orientations.
-    
+     %
+    \setlength{\tabcolsep}{0.5em} % for the horizontal padding
+    {\renewcommand{\arraystretch}{1.2}% for the vertical padding
+    	\begin{table}[t]
+    		\centering
+    		\begin{tabular}{|c|c|c|c|c|}
+    			\hline
+    			&  Duration & Num. of Samples & Num. of Instances  \\ \hline
+    			$3$ robots & $100.6$ minutes & $6,975$ & $465$  \\ \hline
+    			$5$ robots & $45.0$ minutes  & $8,736$ & $208$  \\ \hline
+    		\end{tabular}
+    		\caption{Description of data collected from executions of $3$-robot and $5$-robot teams.}
+    		\label{table:data_description}
+    	\end{table}
+    }
+    %
     We also designed a central trajectory planner $\Psi$ to generate highly 
     arbitrary poses of the robot team without frequent human intervention.
     $\Psi$ essentially provides random waypoints to the \emph{Head} robot simulating a virtual 
@@ -588,14 +587,15 @@
     autocorrelation to help ensure independence of instances, we
     clustered recordings so that instances are separated by at least
     $7$~seconds. All the collected data is open to the 
-    public to encourage more future works on ReTLo:
-    \url{https://github.com/ctyeong/ReTLo}
-%    \footnote{https://github.com/ctyeong/ReTLo}    
+    public\footnote{https://github.com/ctyeong/ReTLo} to encourage more future works 
+    on ReTLo.
+%    \url{https://github.com/ctyeong/ReTLo}
+        
    
     \subsection{Model training and performance evaluation}
 
     Our model is implemented in the \emph{Tensorflow} \emph{Python}
-    library\footnote{https://www.tensorflow.org/} to realize the entire
+    library\footnote{https://www.tensorflow.org} to realize the entire
     pipeline, and it was trained to minimize loss functions such as
     Euclidean distance and mean absolute errors for position and
     orientation estimation, respectively. $60$\% data from the $3$-robot
@@ -632,66 +632,34 @@
     while in the $5$-robot case, it involves all predictions for
     \emph{Follower 2}, \emph{Follower 3}, and \emph{Head}. Moreover, for
     every model except the \emph{2X Heuristic}, the mean performance of
-    $5$~separate learning sessions is reported with the standard
+    $5$~separate learning sessions is obtained with the standard
     deviation.
-    %
+	%
 	\begin{figure}[t]
-        \centering
-        \includegraphics[width=1.\columnwidth]{fig_macro_eval}
-        \caption{Average accumulated error of each model in two different sizes of robot team.
-            For each machine learning method, the mean performance of $5$~separate sessions is reported with a error bar of performance variation.
-        }
-        \label{fig:macro_eval}
+		\centering
+		\includegraphics[width=1.\columnwidth]{fig_macro_eval}
+		\caption{Average accumulated error of each model in two different sizes of robot team.
+			For each machine learning method, the mean performance of $5$~separate sessions is reported with a error bar of performance variation.
+		}
+		\label{fig:macro_eval}
 	\end{figure}
-
+	%
     Figure~\ref{fig:macro_eval} shows that the machine learning methods
-    outperform the \emph{2X Heuristic} in any case. In particular, the
+    outperform the \emph{2X Heuristic} in any case. Particularly, the
     performance gap between \emph{2X Heuristic} and \emph{FC} becomes
-    much larger in $5$-robot case suggesting that realistic
+    much larger in $5$-robot case implying that realistic
     stochasticity presents a significant challenge to the
-    straightforward \emph{2X Heuristic} case. Furthermore, our model
-    clearly shows the performance improvement over the \emph{FC} model,
+    straightforward \emph{2X Heuristic} case. Moreover, our model
+    clearly shows the performance gain over the \emph{FC} model,
     since the average error was reduced by $47\%$ and $40\%$ in the
-    $3$-robot and $5$-robot case, respectively. In addition, considering
+    $3$-robot and $5$-robot case, respectively. Also, considering
     the diameter of a \emph{Thymio} robot is $12$~cm, as only three
     robots are deployed, the average distance between the prediction and
     the true position is shorter than the length of the robot body. This
     overall result proves the effectiveness of encoding a sequence of
     historical behaviors as a feature input over the model fed only with
     very recent observation.
-    %
-    \begin{figure}[t]
-    	\centering
-    	\includegraphics[width=1.\columnwidth]{fig_micro_eval}
-    	\caption{Average step-wise error for different target robots in $5$-robot team.
-    		For each model, all the prediction errors at different time steps are averaged
-    		for a specific robot. The error bars represent the standard deviation of
-    		$5$~separate models in terms of the performance metric. For the sake of
-    		visualization, the error for \emph{Follower~3} is omitted, but note that
-    		in any model, the error ranges between the two visualized errors at every step.
-    	}
-    	\label{fig:micro_eval}
-    \end{figure}
-	%
-	%
-	\begin{figure*}[t]
-		\centering
-		\includegraphics[width=2.\columnwidth]{fig_preds}
-		\caption{Sample video frames with prediction results of our proposed model
-			for three different instances of $5$~robot team.
-			Each row presents four frames of an instance for first $4$~seconds.
-			The yellow robot is \emph{Tail}, the pink is \emph{Head}, and
-			in-between are \emph{Follower} robots.
-			The colored circles are predicted position outputs, in each
-			of which a black arrow is drawn to indicate the predicted orientation as well.
-			The colored triangles with a black line through the center are the
-			results of localization detection used in data collection stage.
-			A small red dot on the arena in each frame is the random destination the
-			\emph{Head} is moving toward, which is re-sampled at intervals.
-		}
-		\label{fig:preds}
-	\end{figure*}
-	%
+       
 	\subsection{Microscopic analysis}
 	\label{sec:microscopic_analysis}
 
@@ -705,7 +673,20 @@
     acceptable error level. During this evaluation, we also had
     $5$~separate training sessions to gain the mean and the variability
     of the performance.
-
+	 %
+	\begin{figure}[t]
+		\centering
+		\includegraphics[width=1.\columnwidth]{fig_micro_eval}
+		\caption{Average step-wise error for different target robots in $5$-robot team.
+			For each model, all the prediction errors at different time steps are averaged
+			for a specific robot. The error bars represent the standard deviation of
+			$5$~separate models in terms of the performance metric. For the sake of
+			visualization, the error for \emph{Follower~3} is omitted, but note that
+			in any model, the error ranges between the two visualized errors at every step.
+		}
+		\label{fig:micro_eval}
+	\end{figure}
+	%
     Figure~\ref{fig:micro_eval} shows that for any target robot, the
     error increases over time due to the design of the repetitive
     prediction method where previous errors would negatively impact the
@@ -725,7 +706,25 @@
     demonstrate the potential of our approach to reduce the
     communication bandwidth necessary for a multi-robot team to perform
     localization.
-        
+    %
+    \begin{figure*}[t]
+    	\centering
+    	\includegraphics[width=2.\columnwidth]{fig_preds}
+    	\caption{Sample video frames with prediction results of our proposed model
+    		for three different instances of $5$~robot team.
+    		Each row presents four frames of an instance for first $4$~seconds.
+    		The yellow robot is \emph{Tail}, the pink is \emph{Head}, and
+    		in-between are \emph{Follower} robots.
+    		The colored circles are predicted position outputs, in each
+    		of which a black arrow is drawn to indicate the predicted orientation as well.
+    		The colored triangles with a black line through the center are the
+    		results of localization detection used in data collection stage.
+    		A small red dot on the arena in each frame is the random destination the
+    		\emph{Head} is moving toward, which is re-sampled at intervals.
+    	}
+    	\label{fig:preds}
+    \end{figure*}
+    %    
    	\subsection{Qualitative results}
 	\label{sec:qualitative_results}
 
@@ -736,8 +735,8 @@
     \emph{Tail} and the red triangle is the \emph{Head}. The circles
     indicate the estimated positions of the two farthest \emph{Follower}
     robots as well as the \emph{Head}.
-
-    Predictions until $4$~seconds are shown to be
+	
+    Predictions until $4$~seconds appear
     reliable, although there are some errors while the group of robots
     is turning with a high angle and when the \emph{Head} changes its
     destination. Predictions tend to be biased more toward the inside of
@@ -748,8 +747,8 @@
     information to constrain the possible locations of farther robots,
     as in data fusion techniques that use formal dynamical models to
     physically constrain estimator variance. However, our approach does
-    not make use of explicit formal dynamical models.
-
+    not utilize explicit formal dynamical models.
+	
 	\section{Summary \& Future work}
 	\label{sec:discussion_and_future_work}
 
@@ -763,7 +762,7 @@
     greatly reduces estimator error, giving it the potential to greatly
     reduce communication bandwidth in other localization schemes that
     otherwise require continuous communication among robots.
-
+	
     To test our approach, we utilized a commercially available robotic
     platform, \emph{Thymio}, to collect datasets from $3$-robot and
     $5$-robot teams. Through empirical experiments, we showed that the
